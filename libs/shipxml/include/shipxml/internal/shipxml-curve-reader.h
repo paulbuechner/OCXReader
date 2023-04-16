@@ -15,6 +15,7 @@
 #ifndef SHIPXML_INCLUDE_SHIPXML_INTERNAL_SHIPXML_CURVE_READER_H_
 #define SHIPXML_INCLUDE_SHIPXML_INTERNAL_SHIPXML_CURVE_READER_H_
 
+#include <Geom_BSplineCurve.hxx>
 #include <LDOM_Element.hxx>
 #include <gp_Dir.hxx>
 
@@ -50,6 +51,16 @@ namespace shipxml {
 
 [[nodiscard]] std::vector<ArcSegment> ReadNURBS3D(LDOM_Element const &crvEL,
                                                   AMCurve const &curve);
+
+//-----------------------------------------------------------------------------
+// Helper functions
+//-----------------------------------------------------------------------------
+
+void Refine(opencascade::handle<Geom_BSplineCurve> const &handle1,
+            double startU, double endU, std::vector<gp_Pnt> &points);
+
+[[nodiscard]] std::vector<ArcSegment> CreateArcSegments(
+    std::vector<gp_Pnt> &points, int startRangeIdx, int endRangeIdx);
 
 }  // namespace shipxml
 

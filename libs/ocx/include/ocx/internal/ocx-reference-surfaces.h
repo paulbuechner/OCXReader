@@ -22,7 +22,7 @@
 
 #include "ocx/ocx-context.h"
 
-namespace ocx::vessel::reference_surfaces {
+namespace ocx::reader::vessel::reference_surfaces {
 
 /**
  * Read the references surfaces from the OCX file.
@@ -31,6 +31,6 @@ namespace ocx::vessel::reference_surfaces {
  */
 void ReadReferenceSurfaces(LDOM_Element const &vesselN);
 
-}  // namespace ocx::vessel::reference_surfaces
+}  // namespace ocx::reader::vessel::reference_surfaces
 
 #endif  // OCX_INCLUDE_OCX_INTERNAL_OCX_REFERENCE_SURFACES_READER_H_

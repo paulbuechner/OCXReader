@@ -1,0 +1,8 @@
+{
+  "input-file": "data/AvevaMidship_ohcm_2.8.6.3docx",
+  "export-format": [
+    "STEP"
+  ],
+  "save-to": "generated",
+  "log-config-file": "config/log_conf.toml"
+}

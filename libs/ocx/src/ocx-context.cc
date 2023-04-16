@@ -22,25 +22,12 @@
 #include <utility>
 
 #include "occutils/occutils-shape.h"
+#include "ocx/internal/ocx-bar-section.h"
 #include "ocx/internal/ocx-exceptions.h"
+#include "ocx/internal/ocx-refplane-wrapper.h"
 #include "ocx/ocx-helper.h"
 
 namespace ocx {
-
-RefPlaneWrapper::RefPlaneWrapper() : type(RefPlaneType::UNDEF) {}
-
-RefPlaneWrapper::RefPlaneWrapper(const RefPlaneType &type,
-                                 const LDOM_Element &refPlaneN,
-                                 const gp_Dir &normal, const gp_Pnt &p1,
-                                 const gp_Pnt &p2, const gp_Pnt &p3)
-    : type(type),
-      refPlaneN(refPlaneN),
-      normal(normal),
-      p1(p1),
-      p2(p2),
-      p3(p3) {}
-
-//-----------------------------------------------------------------------------
 
 bool LDOMCompare::operator()(LDOM_Element const &lhs,
                              LDOM_Element const &rhs) const {
@@ -198,30 +185,75 @@ TopoDS_Shape OCXContext::LookupShape(LDOM_Element const &element) {
 
 //-----------------------------------------------------------------------------
 
-void OCXContext::RegisterRefPlane(std::string const &guid,
-                                  RefPlaneType const &type,
-                                  LDOM_Element const &element,
-                                  gp_Dir const &normal, gp_Pnt const &p0,
-                                  gp_Pnt const &p1, gp_Pnt const &p2) {
-  GUID2RefPlane[guid] = RefPlaneWrapper(type, element, normal, p0, p1, p2);
+void OCXContext::RegisterRefPlane(
+    std::string const &guid, ocx::context_entities::RefPlaneType const &type,
+    LDOM_Element const &element, gp_Dir const &normal, gp_Pnt const &p0,
+    gp_Pnt const &p1, gp_Pnt const &p2) {
+  GUID2RefPlane[guid] = ocx::context_entities::RefPlaneWrapper(
+      guid, type, element, normal, p0, p1, p2);
 }
 
-RefPlaneWrapper OCXContext::LookupRefPlane(std::string_view const &guid) {
+ocx::context_entities::RefPlaneWrapper OCXContext::LookupRefPlane(
+    std::string_view const &guid) {
   if (auto res = GUID2RefPlane.find(guid); res != GUID2RefPlane.end()) {
     return res->second;
   }
   OCX_ERROR("No RefPlane found for given guid {}", guid)
   return {};
 }
+//-----------------------------------------------------------------------------
+
+void OCXContext::RegisterHoleShape(std::string const &guid,
+                                   TopoDS_Shape const &holeShape) {
+  m_holeCatalogue[guid] = holeShape;
+}
 
 //-----------------------------------------------------------------------------
 
-void OCXContext::RegisterBarSection(LDOM_Element const &element,
-                                    BarSection const &section) {
+TopoDS_Shape OCXContext::LookupHoleShape(std::string_view const &guid) {
+  if (auto res = m_holeCatalogue.find(guid); res != m_holeCatalogue.end()) {
+    return res->second;
+  }
+  OCX_ERROR("No HoleShape found for given guid {}", guid)
+  return {};
+}
+
+//-----------------------------------------------------------------------------
+
+void OCXContext::RegisterPrincipalParticulars(
+    ocx::context_entities::PrincipalParticularsWrapper const
+        &PrincipalParticularsWrapper) {
+  m_principalParticulars = PrincipalParticularsWrapper;
+}
+
+ocx::context_entities::PrincipalParticularsWrapper
+OCXContext::GetPrincipalParticulars() {
+  return m_principalParticulars;
+}
+
+//-----------------------------------------------------------------------------
+
+void OCXContext::RegisterVesselGrid(
+    std::vector<ocx::context_entities::VesselGridWrapper> const
+        &vesselGridWrappers) {
+  m_vesselGrid = vesselGridWrappers;
+}
+
+std::vector<ocx::context_entities::VesselGridWrapper>
+OCXContext::GetVesselGrid() {
+  return m_vesselGrid;
+}
+
+//-----------------------------------------------------------------------------
+
+void OCXContext::RegisterBarSection(
+    LDOM_Element const &element,
+    ocx::context_entities::BarSection const &section) {
   LDOM2BarSection[element] = section;
 }
 
-BarSection OCXContext::LookupBarSection(LDOM_Element const &element) const {
+ocx::context_entities::BarSection OCXContext::LookupBarSection(
+    LDOM_Element const &element) const {
   if (auto res = LDOM2BarSection.find(element); res != LDOM2BarSection.end()) {
     return res->second;
   }

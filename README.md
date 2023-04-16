@@ -1,7 +1,7 @@
 <h1 align="center">OCXReader</h1>
 
 OCXReader is a tool to read and parse data from OCX files and export them to
-different formats such as STEP, SHIPXML, glTF, XCAF-XML or XCAF-XFB for
+different formats such as STEP, glTF, XCAF-XML or XCAF-XBF for
 visualization.
 
 ![ocx_model](https://user-images.githubusercontent.com/45827409/212651322-0cb6eb6e-dfb1-4203-afab-ca703fd21a08.png)
@@ -32,13 +32,17 @@ ${vesselname}
       |  |  |__ Contour
       |  |  |__ Surface
       |  |  |__ LimitedBy
-      |  |     |__ Limit 1 ... Limit N
+      |  |  |  |__ Limit 1 ... Limit N
+      |  |  |__ CutBy
+      |  |  |  |__ Cut 1 ... Cut N
       |  |__ Bracket 1 ... Bracket N
       |  |__ Pillar 1 ... Pillar N
       |__ StiffenedBy
       |  |__ Stiffener 1 ... Stiffener N
       |__ LimitedBy
-         |__ Limit 1 ... Limit N
+      |  |__ Limit 1 ... Limit N
+      |__ CutBy
+         |__ Cut 1 ... Cut N
 ````
 
 Currently, major items like reference planes, panels, and plates are already
@@ -47,10 +51,9 @@ implemented. Stiffener traces are shown, but no stiffener representation.
 ### Supported Export Formats
 
 - [x] STEP
-- [ ] SHIPXML
 - [ ] glTF
 - [x] XCAF-XML
-- [x] XCAF-XFB
+- [x] XCAF-XBF
 
 ## Setup
 
@@ -86,6 +89,17 @@ system [here](https://vcpkg.io/en/getting-started.html).
 > Note: For WSL users, make sure to install vcpkg in a directory which grants
 > permission for all users. Otherwise, you will get an error when trying to
 > access and install vcpkg packages through a non-root user.
+
+#### Git submodules
+
+Besides vcpkg the project uses git submodules to manage some of its
+dependencies.
+When checking out the project for the first time, make sure to also initialize
+and update the submodules:
+
+```shell
+$ git submodule update --init --recursive
+```
 
 #### Python
 
@@ -247,8 +261,8 @@ Follow these steps to configure CMake options in CLion:
 
 ## Installation
 
-The projects `cli` provides a functionality to install the project to. A typical
-installation step looks like this:
+The projects `cli` provides a functionality to install the project. To install
+the project, use the `installsln` command:
 
 ```shell
 # Install the project (use cli.bat on Windows)
@@ -276,27 +290,32 @@ $ ocxreader --help
 Allowed options:
 
 Generic options:
-  -v [ --version ]          print version string
-  -h [ --help ]             produce help message
-  --config-file arg         The path to the file containing OCX parsing options
-                            (e.g. path/to/config_file.json)
+  -v [ --version ]              print version string
+  -h [ --help ]                 produce help message
+  --config-file arg             The path to the file containing OCX parsing
+                                options (e.g. path/to/config_file.json)
 
-OCXReader CLI options:
-  -i [ --input-file ] arg   The OCX file to read
-  --export-format arg       The export format(s) to use. This can be one or 
-                            more of the following: STEP, SHIPXML, XCAF-XML, 
-                            XCAF-XBF
-  -s [ --save-to ] arg      The output-file path. Defines were to write the 
-                            exported file(s) to. If not defined files get saved
-                            relative to the program working directory.
-  -o [ --output-file ] arg  The output file name. This is used as the filename 
-                            to the defined export formats. If not defined 
-                            input-file is used.
+OCXReader configuration options:
+  -i [ --input-file ] arg       The OCX file to read
+  --export-format arg           The export format(s) to use. This can be one or
+                                more of the following: STEP, SHIPXML, XCAF-XML,
+                                XCAF-XBF
+  -s [ --save-to ] arg          The output-file path. Defines were to write the
+                                exported file(s) to. If not defined files get
+                                saved relative to the program working
+                                directory.
+  -o [ --output-file ] arg      The output file name. This is used as the
+                                filename to the defined export formats. If not
+                                defined input-file is used.
+  -l [ --log-config-file ] arg  The path to the file containing logging
+                                configuration options options (e.g.
+                                path/to/log_conf.toml)
 ```
 
 The generic option `--config-file` can be used to define the OCXReader CLI
 options in a JSON file.
-A sample configuration file can be found [here](ocxreader/config.example.json).
+A sample configuration file can be
+found [here](ocxreader/config/config.example.json).
 
 ## Contributors
 
@@ -308,6 +327,7 @@ A sample configuration file can be found [here](ocxreader/config.example.json).
     <tr>
       <td align="center"><a href="https://github.com/skfcz"><img src="https://avatars.githubusercontent.com/u/1381962?v=4?s=64" width="64px;" alt="Carsten Zerbst"/><br /><sub><b>Carsten Zerbst</b></sub></a><br /><a href="https://github.com/skfcz/OCXReader/commits?author=skfcz" title="Code">💻</a> <a href="#maintenance-skfcz" title="Maintenance">🚧</a> <a href="https://github.com/skfcz/OCXReader/commits?author=skfcz" title="Documentation">📖</a> <a href="#ideas-skfcz" title="Ideas, Planning, & Feedback">🤔</a></td>
       <td align="center"><a href="https://github.com/paulbuechner"><img src="https://avatars.githubusercontent.com/u/45827409?s=400&u=a62152a15513e36652b045b5879f39f124120254&v=4?s=64" width="64px;" alt="Paul Büchner"/><br /><sub><b>Paul Büchner</b></sub></a><br /><a href="https://github.com/skfcz/OCXReader/commits?author=paulbuechner" title="Code">💻</a> <a href="#maintenance-paulbuechner" title="Maintenance">🚧</a> <a href="https://github.com/skfcz/OCXReader/commits?author=paulbuechner" title="Documentation">📖</a> <a href="#ideas-paulbuechner" title="Ideas, Planning, & Feedback">🤔</a></td>
+      <td align="center"><a href="https://github.com/OzanOzanOzan"><img src="https://avatars.githubusercontent.com/u/42107969?v=4" width="64px;" alt="Paul Büchner"/><br /><sub><b>Ozan</b></sub></a><br /><a href="https://github.com/skfcz/OCXReader/commits?author=OzanOzanOzan" title="Code">💻</a> <a href="#ideas-paulbuechner" title="Ideas, Planning, & Feedback">🤔</a></td>
     </tr>
   </tbody>
 </table>

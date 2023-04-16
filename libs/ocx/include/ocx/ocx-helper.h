@@ -95,6 +95,17 @@ LDOM_Element GetFirstChild(LDOM_Element const &parent,
                            std::string_view localName);
 
 /**
+ * @brief Get the integer attribute value from an attribute. If the attribute is
+ * missing the value is not touched
+ *
+ * @param elem the element containing the attribute
+ * @param attrName the attributes name
+ * @param value the variable to put the value
+ */
+void GetIntegerAttribute(LDOM_Element const &elem, std::string const &attrName,
+                         Standard_Integer &value);
+
+/**
  * @brief Get the double attribute value from an attribute. Does not care if
  * this is more an integer '50' or double '50.0'. If the attribute is missing
  * the value is not touched
@@ -109,6 +120,8 @@ void GetDoubleAttribute(LDOM_Element const &elem, std::string const &attrName,
 gp_Pnt ReadPoint(LDOM_Element const &pointN);
 
 gp_Dir ReadDirection(LDOM_Element const &dirN);
+
+gp_Trsf ReadTransformation(LDOM_Element transfEle);
 
 double ReadDimension(LDOM_Element const &valueN);
 
@@ -153,8 +166,9 @@ PolesWeightsSurface ParseControlPointsSurface(
  * @param wire the wire to cut with
  * @return the cut shape or an empty shape if the cut failed
  */
-TopoDS_Shape CutShapeByWire(TopoDS_Shape const &shape, TopoDS_Wire const &wire,
-                            std::string_view id, std::string_view guid);
+TopoDS_Shape LimitShapeByWire(TopoDS_Shape const &shape,
+                              TopoDS_Wire const &wire, std::string_view id,
+                              std::string_view guid);
 
 /**
  * Compute the 3D intersection between a two surfaces

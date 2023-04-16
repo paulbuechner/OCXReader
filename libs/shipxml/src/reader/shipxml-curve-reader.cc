@@ -14,6 +14,8 @@
 
 #include "shipxml/internal/shipxml-curve-reader.h"
 
+#include <shipxml/internal/shipxml-helper.h>
+
 #include <GC_MakeArcOfCircle.hxx>
 #include <GC_MakeCircle.hxx>
 #include <GC_MakeLine.hxx>
@@ -33,6 +35,10 @@ namespace shipxml {
 shipxml::AMCurve ReadCurve(LDOM_Element const& curveRootN, MajorPlane const& mp,
                            gp_Dir const& normal) {
   auto meta = ocx::helper::GetOCXMeta(curveRootN);
+
+  SHIPXML_DEBUG("ReadCurve on major plane {}, normal [{}, {}, {}]",
+                magic_enum::enum_name(mp).data(), normal.X(), normal.Y(),
+                normal.Z());
 
   auto crv = AMCurve(ToAMSystem(normal));
 
@@ -99,6 +105,9 @@ std::vector<ArcSegment> ReadNURBS3D(const LDOM_Element& nurbs3DN,
                                     AMCurve const& amCurve) {
   auto meta = ocx::helper::GetOCXMeta(nurbs3DN);
 
+  SHIPXML_DEBUG("    ReadNURBS3D {} on  {}", meta->id,
+                magic_enum::enum_name(amCurve.GetSystem()).data());
+
   LDOM_Element propsN = ocx::helper::GetFirstChild(nurbs3DN, "NURBSproperties");
   if (propsN.isNull()) {
     SHIPXML_ERROR(
@@ -117,7 +126,7 @@ std::vector<ArcSegment> ReadNURBS3D(const LDOM_Element& nurbs3DN,
       ocx::utils::stob(propsN.getAttribute("isRational").GetString());
 
   SHIPXML_DEBUG(
-      "Found NURBSproperties: degree={}, numCtrlPoints={}, numKnots={}, "
+      "    Found NURBSproperties: degree={}, numCtrlPoints={}, numKnots={}, "
       "form={}, isRational={}",
       degree, numCtrlPoints, numKnots, form.empty() ? "Unknown" : form,
       isRational)
@@ -162,205 +171,99 @@ std::vector<ArcSegment> ReadNURBS3D(const LDOM_Element& nurbs3DN,
 
   // TODO: replace by lookup of calculated curve
 
+  // now calculate a number of points,
+  // subdividing the deltaU in case the direction of
+  // the curve changes between two points
+  std::vector<gp_Pnt> points;
+  double samePointTolerance = 0.00075;  // we assume < 1mm is ok
+
   double uStart = kn.knots.First();
   double uEnd = kn.knots.Last();
   int deltas = (numCtrlPoints * 3);
   double deltaU = (uEnd - uStart) / deltas;
 
-  SHIPXML_DEBUG("u [{}, {}], delta u {}, #{}", uStart, uEnd, deltaU, deltas);
+  SHIPXML_DEBUG("    u [{}, {}], delta u {}, #{}", uStart, uEnd, deltaU, deltas)
 
-  // precalculate the points for performance reasons
-  std::vector<gp_Pnt> points;
-  gp_Pnt firstPoint;
-  curve->D0(uStart, firstPoint);
-  points.push_back(firstPoint);
+  double previousU = uStart;
+  gp_Pnt previousPoint;
+  gp_Vec previousDir;
 
-  double tolerance = 0.002;  // we assume 2mm is ok
-  double u = uStart + deltaU;
-  while (u < uEnd) {
+  // The first point
+  curve->D1(previousU, previousPoint, previousDir);
+  points.push_back(previousPoint);
+
+  // all following points
+  double ku = uStart + deltaU;
+  while (ku < uEnd) {
     gp_Pnt point;
-    curve->D0(u, point);
+    gp_Vec dir;
 
-    // if the distance to the last point is not > tolerance, skip it
-    if (points.back().Distance(point) > tolerance) {
+    curve->D1(ku, point, dir);
+    double angle = previousDir.Angle(dir) / M_PI * 180.0;
+
+    SHIPXML_DEBUG("u {},  {} angle to last {}°", ku,
+                  CartesianPoint(point).ToString(), angle)
+
+    if (angle < 1e-3) {
+      SHIPXML_DEBUG("    skip")
+    } else if (angle < 15) {
+      SHIPXML_DEBUG("    keep")
       points.push_back(point);
+    } else {
+      SHIPXML_DEBUG("    refine between {} and {}, have #{} points", previousU,
+                    ku, points.size())
+
+      Refine(curve, previousU, ku, points);
+      SHIPXML_DEBUG("    added to #{} points", points.size())
     }
-    u += deltaU;
+
+    previousU = ku;
+    previousPoint = point;
+    previousDir = dir;
+    ku += deltaU;
   }
-  // Only push last point if not already contained
-  gp_Pnt lastPoint{};
-  curve->D0(uEnd, lastPoint);
-  if (points.back().Distance(lastPoint) > tolerance) {
-    points.push_back(lastPoint);
+  // the last point
+  // TODO: check subdivision also on last leg ?
+  curve->D1(uEnd, previousPoint, previousDir);
+  if (points.back().Distance(previousPoint) > samePointTolerance) {
+    points.push_back(previousPoint);
   }
 
-  SHIPXML_DEBUG("created #{} points", points.size());
+  SHIPXML_DEBUG("    created #{} points", points.size())
+  for (int i = 0; i < points.size(); i++) {
+    gp_Pnt pnt = points.at(i);
+    SHIPXML_DEBUG("    #{} [ {},  {}, {} ]", i, pnt.X(), pnt.Y(), pnt.Z())
+  }
 
-  //    for ( int i = 0; i < points.size();i++) {
-  //      SHIPXML_DEBUG( "#{} {}", i, ToString( Convert(points.at(i))))
-  //    }
-
+  // Now we want to find the arcs which span a maximal amount of points.
+  // We expect that a line from two points is always a valid solution.
+  // If two subsequent points lay within same point tolerance start a new
+  // arc/line segment.
   std::vector<ArcSegment> segments;
 
-  // now we want to find the arcs which span a maximal amount of points
-  // we expect that a line from two points is always a valid solution
-  int currentStart = 0;
-  int lastValidEnd = currentStart + 1;
-  bool lastValidIsArc = false;
-  int currentEnd = lastValidEnd + 1;
-
-  while (currentEnd < points.size()) {
-    // SHIPXML_DEBUG("check from #{} to #{}", currentStart, currentEnd)
-    //  we build a circle from three points
-    auto arcStart = points.at(currentStart);
-    auto arcEnd = points.at(currentEnd);
-    int iItm = (currentEnd - currentStart) < 3
-                   ? currentStart + 1
-                   : (int)ceil((currentStart + currentEnd) / 2.0);
-    auto arcItm = points.at(iItm);
-
-    //    SHIPXML_DEBUG("start {}, end {}, onArc {}",
-    //              ToString(Convert(arcStart)),
-    //              ToString(Convert(arcEnd)),
-    //              ToString(Convert(arcItm)));
-
-    bool isValid = true;
-    bool isArc = false;
-
-    // we spare the effort of using GProp_PEquation and directly use
-    // GC_MakeArcOfCircle to check and create
-    // FIXME: Fix circle fail: Issue is resulting Crossproduct of created DIR1
-    // FIXME: and DIR2 (gp_Dir Dir3 = Dir1.Crossed(Dir2);) results in solution
-    // FIXME: (0,0,0) which cannot get assigned as gp_Dir (cannot be 0,0,0)
-    GC_MakeArcOfCircle mkacc(arcStart, arcEnd, arcItm);
-    if (mkacc.IsDone()) {
-      Handle(Geom_TrimmedCurve) const& arc = mkacc.Value();
-      Handle(Geom_Curve) baseCurve = arc->BasisCurve();
-      Handle(Geom_Circle) circle = Handle(Geom_Circle)::DownCast(baseCurve);
-
-      // for a circle using brute code instead of BRepExtrema_DistShapeShape is
-      // much faster
-      gp_Pnt center = circle->Location();
-      double radius = circle->Radius();
-
-      // SHIPXML_DEBUG("created circle at {},r {}", ToString(Convert(center)),
-      // radius)
-
-      for (int i = currentStart + 1; i < currentEnd; i++) {
-        gp_Pnt pointToCheck = points.at(i);
-
-        if (abs(center.Distance(pointToCheck) - radius) > tolerance) {
-          // ok, we exceeded the distance, this solution is not valid;
-          SHIPXML_DEBUG("check failed at {} {} {}", center.X(), center.Y(),
-                        center.Z())
-          isValid = false;
-          break;
-        }
-      }
-
-      isArc = true;
-    } else {
-      // points most probably have been collinear, so we check using a line
-      // for a line using brute code instead of BRepExtrema_DistShapeShape is
-      // much faster see
-      // https://math.stackexchange.com/questions/1905533/find-perpendicular-distance-from-point-to-line-in-3d
-      GC_MakeLine mkln(arcStart, arcEnd);
-      if (mkln.IsDone()) {
-        SHIPXML_DEBUG("check as line")
-
-        //   vec3 d = (C - B) / C.distance(B);
-        auto d = gp_Vec(arcStart, arcEnd);
-        d.Normalize();
-        for (int i = currentStart + 1; i < currentEnd; i++) {
-          gp_Pnt pointToCheck = points.at(i);
-
-          // vec3 v = A - B;
-          auto v = gp_Vec(arcStart, pointToCheck);
-          // double t = v.dot(d);
-          double t = v.Dot(d);
-          // vec3 P = B + t * d;
-          auto P = gp_Pnt(arcEnd.X() + t * d.X(), arcEnd.Y() + t * d.Y(),
-                          arcEnd.Y() + t * d.Y());
-          if (P.Distance(pointToCheck) > tolerance) {
-            // check failed
-            SHIPXML_DEBUG("check failed at [{} {} {}]", pointToCheck.X(),
-                          pointToCheck.Y(), pointToCheck.Z())
-            isValid = false;
-            break;
-          }
-        }  // end of line check loop
-        isArc = false;
-      } else {
-        SHIPXML_ERROR("failed to create a line from [{} {} {}] to [{} {} {}]",
-                      arcStart.X(), arcStart.Y(), arcStart.Z(), arcEnd.X(),
-                      arcEnd.Y(), arcEnd.Z())
-        isValid = false;
-      }
-    }  // end of arc/line check
-    if (isValid) {
-      lastValidEnd = currentEnd;
-      lastValidIsArc = isArc;
-      currentEnd++;
-      // special handling for the last arc in case that lastValidEnd == last
-      // point
-      // SHIPXML_DEBUG("check passed at #{}, next check for #{},
-      // {}",lastValidEnd, currentEnd, isArc ? " as arc" :  "as line")
-      if (lastValidIsArc != points.size() - 1) {
+  int rangeStartIdx = 0;
+  int rangeEndIdx = 1;
+  while (rangeEndIdx < points.size()) {
+    // Look ahead to evaluate if it's the last point of a range between two
+    // knuckles
+    if (rangeEndIdx + 1 < points.size()) {
+      auto pointN = points[rangeEndIdx];
+      if (pointN.Distance(points[rangeEndIdx + 1]) > samePointTolerance) {
+        rangeEndIdx++;
         continue;
       }
     }
-    // fall back to the previous solution
-    SHIPXML_DEBUG("check failed, go back to #{} to #{}, create {}",
-                  currentStart, lastValidEnd, lastValidIsArc ? "arc" : "line")
-    gp_Pnt foundStart = points.at(currentStart);
-    gp_Pnt end = points.at(lastValidEnd);
 
-    // SHIPXML_DEBUG("    start {}, end {}", ToString(Convert(foundStart)),
-    // ToString(Convert(end)))
+    SHIPXML_DEBUG("check range range from #{} to #{}", rangeStartIdx,
+                  rangeEndIdx)
+    auto rangeSegments = CreateArcSegments(points, rangeStartIdx, rangeEndIdx);
 
-    if (lastValidIsArc) {
-      iItm = (lastValidEnd - currentStart) < 3
-                 ? currentStart + 1
-                 : (int)ceil((currentStart + lastValidEnd) / 2.0);
-      arcItm = points.at(iItm);
-
-      // SHIPXML_DEBUG("    found onArc #{}, {}", iItm,
-      // ToString(Convert(arcItm)))
-
-      GC_MakeArcOfCircle mkfacc(foundStart, end, arcItm);
-      if (!mkfacc.IsDone()) {
-        SHIPXML_ERROR("    failed to create arc")
-      }
-
-      Handle(Geom_Curve) baseCurve = mkfacc.Value()->BasisCurve();
-      Handle(Geom_Circle) circle = Handle(Geom_Circle)::DownCast(baseCurve);
-
-      // TODO: check withershins
-
-      segments.emplace_back(arcStart, arcEnd, arcItm, circle->Location(), true);
-
-    } else {
-      segments.emplace_back(foundStart, end);
+    // Add the segments to the list
+    for (const auto& segment : rangeSegments) {
+      segments.push_back(segment);
     }
-
-    // now continue from last valid solution
-    currentStart = lastValidEnd;
-    lastValidEnd = currentStart + 1;
-    lastValidIsArc = false;
-    currentEnd = lastValidEnd + 1;
-
-    if (currentEnd >= points.size()) {
-      break;
-    }
-
-  }  // end of while loop
-
-  if (lastValidEnd + 1 < points.size()) {
-    SHIPXML_DEBUG("add closing line from #{} to #{}", currentStart,
-                  points.size() - 1);
-    auto arcStart = points.at(currentStart);
-    auto const& arcEnd = points.at(points.size() - 1);
-    segments.emplace_back(arcStart, arcEnd);
+    rangeStartIdx = rangeEndIdx + 1;
+    rangeEndIdx = rangeStartIdx + 1;
   }
 
   SHIPXML_DEBUG("created #{} arcs", segments.size());
@@ -422,7 +325,8 @@ std::vector<ArcSegment> ReadCircumArc3D(const LDOM_Element& circleN,
   LDOM_Element intN = ocx::helper::GetFirstChild(circleN, "IntermediatePoint");
   if (intN.isNull()) {
     SHIPXML_ERROR(
-        "No IntermediatePoint child node found in CircumArc3D with curve id={} "
+        "No IntermediatePoint child node found in CircumArc3D with curve "
+        "id={} "
         "guid={}",
         meta->id, meta->guid)
     return {};
@@ -431,7 +335,8 @@ std::vector<ArcSegment> ReadCircumArc3D(const LDOM_Element& circleN,
   LDOM_Element endN = ocx::helper::GetFirstChild(circleN, "EndPoint");
   if (endN.isNull()) {
     SHIPXML_ERROR(
-        "No EndPoint child node found in CircumArc3D with curve id={} guid={}",
+        "No EndPoint child node found in CircumArc3D with curve id={} "
+        "guid={}",
         meta->id, meta->guid)
     return {};
   }
@@ -493,7 +398,8 @@ std::vector<ArcSegment> ReadCircle3D(const LDOM_Element& circleN,
   LDOM_Element intN = ocx::helper::GetFirstChild(circleN, "IntermediatePoint");
   if (intN.isNull()) {
     SHIPXML_ERROR(
-        "No IntermediatePoint child node found in CircumArc3D with curve id={} "
+        "No IntermediatePoint child node found in CircumArc3D with curve "
+        "id={} "
         "guid={}",
         meta->id, meta->guid)
     return {};
@@ -502,7 +408,8 @@ std::vector<ArcSegment> ReadCircle3D(const LDOM_Element& circleN,
   LDOM_Element endN = ocx::helper::GetFirstChild(circleN, "EndPoint");
   if (endN.isNull()) {
     SHIPXML_ERROR(
-        "No EndPoint child node found in CircumArc3D with curve id={} guid={}",
+        "No EndPoint child node found in CircumArc3D with curve id={} "
+        "guid={}",
         meta->id, meta->guid)
     return {};
   }
@@ -516,7 +423,8 @@ std::vector<ArcSegment> ReadCircle3D(const LDOM_Element& circleN,
   Handle(Geom_Circle) circle = Handle(Geom_Circle)::DownCast(baseCurve);
   gp_Pnt center = circle->Location();
 
-  // Check if the circle is wither-shins when seen from fore, above or starboard
+  // Check if the circle is wither-shins when seen from fore, above or
+  // starboard
   gp_Vec reference{};
   switch (curve.GetSystem()) {
     case AMSystem::XY:
@@ -584,6 +492,297 @@ std::vector<ArcSegment> ReadCompositeCurve3D(const LDOM_Element& crvEL,
                                              AMCurve const& curve) {
   SHIPXML_ERROR("ReadCompositeCurve3D is not implemented")
   return {};
+}
+
+//-----------------------------------------------------------------------------
+
+void Refine(opencascade::handle<Geom_BSplineCurve> const& curve, double startU,
+            double endU, std::vector<gp_Pnt>& points) {
+  SHIPXML_DEBUG("    Refine between u = {} and {}, add to #{} points", startU,
+                endU, points.size())
+
+  // Now we want to get as close as possible to any possible knuckle points
+  gp_Pnt lastPoint = points.back();
+  SHIPXML_DEBUG("        last found point {}",
+                CartesianPoint(lastPoint).ToString())
+
+  gp_Pnt point0;
+  gp_Vec dir0;
+  curve->D1(startU, point0, dir0);
+
+  double u1 = (endU + startU) / 2.0;
+  gp_Pnt point1;
+  gp_Vec dir1;
+  curve->D1(u1, point1, dir1);
+
+  double angle01 = dir0.Angle(dir1) / M_PI * 180.0;
+
+  SHIPXML_DEBUG("        fh: {} and {}, angle {}°",
+                CartesianPoint(point0).ToString(),
+                CartesianPoint(point1).ToString(), angle01)
+
+  if (angle01 < 1e-3) {
+    SHIPXML_DEBUG("        skip")
+  } else if (point0.Distance(point1) < 1e-3) {
+    SHIPXML_DEBUG("        reached min distance at {}",
+                  CartesianPoint(point1).ToString())
+    points.push_back(point0);
+    points.push_back(point0);
+  } else if (angle01 < 15) {
+    SHIPXML_DEBUG("        keep")
+    points.push_back(point0);
+    points.push_back(point1);
+  } else {
+    SHIPXML_DEBUG("        refine")
+    Refine(curve, startU, u1, points);
+  }
+
+  gp_Pnt point2;
+  gp_Vec dir2;
+  curve->D1(endU, point2, dir2);
+
+  double angle02 = dir1.Angle(dir2) / M_PI * 180.0;
+
+  SHIPXML_DEBUG("        sh: {} and {}, angle {}°",
+                CartesianPoint(point1).ToString(),
+                CartesianPoint(point2).ToString(), angle02)
+
+  if (angle02 < 1e-3) {
+    SHIPXML_DEBUG("         skip")
+  } else if (point1.Distance(point2) < 1e-3) {
+    SHIPXML_DEBUG("        reached min distance at {}",
+                  CartesianPoint(point2).ToString())
+    points.push_back(point1);
+    points.push_back(point1);
+  } else if (angle02 < 15) {
+    SHIPXML_DEBUG("        keep")
+    points.push_back(point1);
+    points.push_back(point2);
+  } else {
+    SHIPXML_DEBUG("        refine")
+    Refine(curve, u1, endU, points);
+  }
+}
+
+//-----------------------------------------------------------------------------
+
+std::vector<ArcSegment> CreateArcSegments(std::vector<gp_Pnt>& points,
+                                          int startRangeIdx, int endRangeIdx) {
+  SHIPXML_DEBUG("CreateArcSegments from #{} to #{}", startRangeIdx, endRangeIdx)
+
+  std::vector<ArcSegment> segments;
+
+  // Return a line if range is 1
+  if ((endRangeIdx - startRangeIdx) == 1) {
+    gp_Pnt p0 = points.at(startRangeIdx);
+    gp_Pnt p1 = points.at(endRangeIdx);
+    segments.emplace_back(p0, p1);
+    return segments;
+  }
+
+  int currentStartIdx = startRangeIdx;
+  int lastValidEndIdx = currentStartIdx + 1;
+  bool lastValidIsArc = false;
+  bool foundKnuckle = false;
+  int currentEndIdx = lastValidEndIdx + 1;
+
+  double maxDistanceToCurve = 0.002;  // 2mm is ok
+
+  while (currentEndIdx < endRangeIdx) {
+    SHIPXML_DEBUG("    check from #{} to #{}", currentStartIdx, currentEndIdx)
+
+    auto arcStart = points[currentStartIdx];
+    auto arcEnd = points[currentEndIdx];
+    auto arcItem = points[currentEndIdx];
+
+    bool checkArc = currentEndIdx - currentStartIdx > 1;
+
+    if (checkArc) {
+      int iItm = (currentEndIdx - currentStartIdx) < 3
+                     ? currentStartIdx + 1
+                     : (int)ceil((currentStartIdx + currentEndIdx) / 2.0);
+      arcItem = points[iItm];
+
+      // Depending on build mode e.g. Debug, the GC_MakeArcOfCircle is picky,
+      // so we need to check for collinearity first
+      auto sm = gp_Vec(arcStart, arcItem);
+      auto me = gp_Vec(arcItem, arcEnd);
+
+      // Check for valid vectors
+      if (sm.SquareMagnitude() < 1e-6 || me.SquareMagnitude() < 1e-6) {
+        checkArc = false;
+      } else {
+        // Check for collinearity
+        if (sm.Angle(me) / M_PI * 180 < 2) {
+          checkArc = false;
+        }
+      }
+    }
+
+    bool isValid = true;
+    bool isArc = false;
+
+    if (checkArc) {
+      // We build a circle from three points
+      SHIPXML_TRACE(
+          "    check arc, use {}/{}\\{}", CartesianPoint(arcStart).ToString(),
+          CartesianPoint(arcItem).ToString(), CartesianPoint(arcEnd).ToString())
+
+      // We spare the effort of using GProp_PEquation and directly use
+      // GC_MakeArcOfCircle to check and create
+      GC_MakeArcOfCircle mkacc(arcStart, arcEnd, arcItem);
+      if (mkacc.IsDone()) {
+        Handle(Geom_Curve) baseCurve = mkacc.Value()->BasisCurve();
+        Handle(Geom_Circle) circle = Handle(Geom_Circle)::DownCast(baseCurve);
+
+        // for a circle using brute code instead of BRepExtrema_DistShapeShape
+        // is much faster
+        gp_Pnt center = circle->Location();
+        double radius = circle->Radius();
+
+        SHIPXML_TRACE("    check as arc,  center {}, r {}",
+                      CartesianPoint(center).ToString(), radius)
+
+        for (int i = currentStartIdx + 1; i < currentEndIdx; i++) {
+          double dist = abs(center.Distance(points[i]) - radius);
+          if (dist > maxDistanceToCurve) {
+            // Exceeded max distance, this solution is not valid
+            SHIPXML_TRACE("        check failed at #{} {}, distance {}", i,
+                          CartesianPoint(center).ToString(), dist)
+            isValid = false;
+            break;
+          }
+        }
+        SHIPXML_TRACE("    check {} for arc from {} to {}, center {}",
+                      isValid ? "succeed" : "failed",
+                      CartesianPoint(arcStart).ToString(),
+                      CartesianPoint(arcEnd).ToString(),
+                      CartesianPoint(center).ToString())
+        isArc = true;
+      } else {
+        // This should not happen
+        SHIPXML_ERROR("failed to create an arc through {}/{}\\{}",
+                      CartesianPoint(arcStart).ToString(),
+                      CartesianPoint(arcItem).ToString(),
+                      CartesianPoint(arcEnd).ToString())
+        checkArc = false;
+      }
+    }
+
+    if (!checkArc) {
+      // points are either collinear or just two anyhow, so we check using a
+      // line
+      GC_MakeLine mkln(arcStart, arcEnd);
+      if (mkln.IsDone()) {
+        SHIPXML_TRACE("    check as line from {} to {}",
+                      CartesianPoint(arcStart).ToString(),
+                      CartesianPoint(arcEnd).ToString())
+
+        gp_Lin line = mkln.Value()->Lin();
+
+        for (int i = currentStartIdx + 1; i < currentEndIdx; i++) {
+          gp_Pnt pointToCheck = points[i];
+          double dist = line.Distance(pointToCheck);
+          //          SHIPXML_DEBUG("        at #{} {}, distance {}", i,
+          //                        ToString(Convert(pointToCheck)), dist);
+          if (dist > maxDistanceToCurve) {
+            // check failed
+            SHIPXML_TRACE("    check failed at [{} {} {}]", pointToCheck.X(),
+                          pointToCheck.Y(), pointToCheck.Z())
+            isValid = false;
+            break;
+          }
+
+        }  // end of line check loop
+        isArc = false;
+
+        SHIPXML_TRACE("    check {} for line from {} to {}",
+                      isValid ? "succeed" : "failed",
+                      CartesianPoint(arcStart).ToString(),
+                      CartesianPoint(arcEnd).ToString())
+
+      } else {
+        SHIPXML_ERROR("failed to create a line from [{} {} {}] to [{} {} {}]",
+                      arcStart.X(), arcStart.Y(), arcStart.Z(), arcEnd.X(),
+                      arcEnd.Y(), arcEnd.Z())
+        isValid = false;
+      }
+    }
+
+    if (isValid) {
+      lastValidEndIdx = currentEndIdx;
+      lastValidIsArc = isArc;
+      currentEndIdx++;
+      continue;
+    }
+
+    // fall back to the previous solution
+    gp_Pnt foundStart = points[currentStartIdx];
+    gp_Pnt end = points[lastValidEndIdx];
+
+    SHIPXML_TRACE("check loop finished as {}, start #{} ({}), end #{} ({})",
+                  lastValidIsArc ? "arc" : "line", currentStartIdx,
+                  CartesianPoint(foundStart).ToString(), lastValidEndIdx,
+                  CartesianPoint(end).ToString())
+
+    if (lastValidIsArc) {
+      int iItm = (lastValidEndIdx - currentStartIdx) < 3
+                     ? currentStartIdx + 1
+                     : (int)ceil((currentStartIdx + lastValidEndIdx) / 2.0);
+      auto arcItm = points[iItm];
+
+      // SHIPXML_DEBUG("    found onArc #{}, {}", iItm,
+      // ToString(Convert(arcItm)))
+
+      GC_MakeArcOfCircle mkfacc(foundStart, end, arcItm);
+      if (!mkfacc.IsDone()) {
+        SHIPXML_ERROR("    failed to create arc")
+      }
+
+      Handle(Geom_Curve) baseCurve = mkfacc.Value()->BasisCurve();
+      Handle(Geom_Circle) circle = Handle(Geom_Circle)::DownCast(baseCurve);
+
+      SHIPXML_DEBUG(
+          "    create arc from create line from #{} ({}) to #{} ({}), center "
+          "{}",
+          currentStartIdx, CartesianPoint(foundStart).ToString(),
+          lastValidEndIdx, CartesianPoint(end).ToString(),
+          CartesianPoint(circle->Location()).ToString())
+
+      // TODO: check withershins
+
+      segments.emplace_back(arcStart, arcEnd, arcItm, circle->Location(), true);
+    } else {
+      SHIPXML_DEBUG("    create line from #{} ({}) to #{} ({})",
+                    currentStartIdx, CartesianPoint(foundStart).ToString(),
+                    lastValidEndIdx, CartesianPoint(end).ToString())
+      segments.emplace_back(foundStart, end);
+    }
+
+    // now continue from last valid solution
+    currentStartIdx = lastValidEndIdx;
+    lastValidEndIdx = currentStartIdx + 1;
+    lastValidIsArc = false;
+    currentEndIdx = lastValidEndIdx + 1;
+
+    if (currentEndIdx >= endRangeIdx) {
+      break;
+    }
+
+  }  // end of while loop
+
+  if (lastValidEndIdx + 1 < endRangeIdx) {
+    SHIPXML_DEBUG("add closing line from #{} to #{}", currentStartIdx,
+                  points.size() - 1)
+    auto arcStart = points[currentStartIdx];
+    auto arcEnd = points[points.size() - 1];
+    segments.emplace_back(arcStart, arcEnd);
+  }
+
+  SHIPXML_INFO("created #{} arcs for range {} -- {}", segments.size(),
+               startRangeIdx, endRangeIdx)
+
+  return segments;
 }
 
 }  // namespace shipxml

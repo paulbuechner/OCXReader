@@ -50,7 +50,7 @@ jobs:
       - name: Free up disk space
         shell: bash
         run: |
-          if [ "${{ matrix.os }}" == "ubuntu-latest" || "${{ matrix.os }}" == "macos-latest" ]; then
+          if [[ "${{ matrix.os }}" == "ubuntu-latest" || "${{ matrix.os }}" == "macos-latest" ]]; then
             sudo rm -rf /usr/local/share/boost /usr/share/dotnet /usr/local/lib/android /opt/ghc 
             df -h
           fi

@@ -1,3 +1,6 @@
 [submodule "deps/spdlog_setup"]
 	path = deps/spdlog_setup
 	url = https://github.com/guangie88/spdlog_setup
+[submodule "vcpkg/vcpkg"]
+	path = vcpkg/vcpkg
+	url = https://github.com/microsoft/vcpkg.git

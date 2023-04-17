@@ -66,13 +66,11 @@ To build OCXReader you need to have the prerequisites set up:
 The project uses C++17 features and therefore requires a compiler that supports
 this standard.
 
-Compiler compatibility:
+Compiler compatibility (tested):
 
 - Clang/LLVM >= 6
 - MSVC++ >= 14.11 / Visual Studio >= 2017
-- Xcode >= 10
 - GCC >= 9
-- MinGW >= 9
 
 #### CMake
 
@@ -118,7 +116,7 @@ lrwxrwxrwx 1 root root 9  7. Jan 15:51 /usr/bin/python3 -> python3.7 # required 
 The project uses OpenCascade as a geometry kernel. It is automatically
 downloaded and build by `vcpkg` package manager.
 
-To build OpenCascade on UNIX systems, install the following packages:
+To build OpenCascade on UNIX like systems, install the following packages:
 
 <details><summary>Ubuntu</summary>
 <p>

@@ -115,9 +115,16 @@ jobs:
           fi
 
       # Test the whole project with CTest, again Release configuration only.
-      # - name: Test (Release configuration)
-      #   run: |
-      #     ctest --preset ocxreader-ninja-multiconfiguration-vcpkg --config Release
+#      - name: Test (Release configuration)
+#        shell: bash
+#        run: |
+#          if [ "${{ matrix.os }}" == "windows-latest" ]; then
+#            ctest --preset ocxreader-ninja-multiconfiguration-vcpkg-windows --config Release
+#          elif [ "${{ matrix.os }}" == "ubuntu-latest" ]; then
+#            ctest --preset ocxreader-ninja-multiconfiguration-vcpkg-ubuntu --config Release
+#          elif [ "${{ matrix.os }}" == "macos-latest" ]; then
+#            ctest --preset ocxreader-ninja-multiconfiguration-vcpkg-macos --config Release
+#          fi
 
       # Upload logs (vcpkg's logs and CMake's logs) as artifacts.
       - name: Upload vcpkg build log files

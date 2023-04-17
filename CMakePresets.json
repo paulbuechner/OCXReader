@@ -81,9 +81,19 @@
   ],
   "testPresets": [
     {
-      "name": "ocxreader-ninja-multiconfiguration-vcpkg",
-      "configurePreset": "ocxreader-ninja-multiconfiguration-vcpkg",
-      "description": "Test with Ninja the provided configuration with --config"
+      "name": "ocxreader-ninja-multiconfiguration-vcpkg-windows",
+      "configurePreset": "ocxreader-ninja-multiconfiguration-vcpkg-windows",
+      "description": "Test with Ninja the provided configuration with --config on Windows"
+    },
+    {
+      "name": "ocxreader-ninja-multiconfiguration-vcpkg-ubuntu",
+      "configurePreset": "ocxreader-ninja-multiconfiguration-vcpkg-ubuntu",
+      "description": "Test with Ninja the provided configuration with --config on Ubuntu"
+    },
+    {
+      "name": "ocxreader-ninja-multiconfiguration-vcpkg-macos",
+      "configurePreset": "ocxreader-ninja-multiconfiguration-vcpkg-macos",
+      "description": "Test with Ninja the provided configuration with --config on MacOS"
     }
   ]
 }

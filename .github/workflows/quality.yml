@@ -65,7 +65,7 @@ jobs:
       - uses: lukka/get-cmake@latest
 
       # Restore vcpkg from the GitHub Action cache service. Note that packages are restored by vcpkg's binary caching
-      # when it is being run afterwards by CMake.
+      # when it is being run afterward by CMake.
       - name: Restore vcpkg
         uses: actions/cache@v3
         with:
@@ -92,17 +92,27 @@ jobs:
       # This step also runs vcpkg with Binary Caching leveraging GitHub Action cache to
       # store the built packages artifacts.
       - name: Restore from cache the dependencies and generate project files
+        shell: bash
         run: |
-          if [ "${{ matrix.os }}" == "ubuntu-latest" ] || [ "${{ matrix.os }}" == "windows-latest" ]; then
-            cmake --preset ocxreader-ninja-multiconfiguration-vcpkg
+          if [ "${{ matrix.os }}" == "windows-latest" ]; then
+            cmake --preset ocxreader-ninja-multiconfiguration-vcpkg-windows
+          elif [ "${{ matrix.os }}" == "ubuntu-latest" ]; then
+            cmake --preset ocxreader-ninja-multiconfiguration-vcpkg-ubuntu
           elif [ "${{ matrix.os }}" == "macos-latest" ]; then
             cmake --preset ocxreader-ninja-multiconfiguration-vcpkg-macos
           fi
 
       # Build (Release configuration only) the whole project with Ninja (which is spawn by CMake).
       - name: Build (Release configuration)
+        shell: bash
         run: |
-          cmake --build --preset ocxreader-ninja-multiconfiguration-vcpkg --config Release
+          if [ "${{ matrix.os }}" == "windows-latest" ]; then
+            cmake --build --preset ocxreader-ninja-multiconfiguration-vcpkg-windows --config Release
+          elif [ "${{ matrix.os }}" == "ubuntu-latest" ]; then
+            cmake --build --preset ocxreader-ninja-multiconfiguration-vcpkg-ubuntu --config Release
+          elif [ "${{ matrix.os }}" == "macos-latest" ]; then
+            cmake --build --preset ocxreader-ninja-multiconfiguration-vcpkg-macos --config Release
+          fi
 
       # Test the whole project with CTest, again Release configuration only.
       # - name: Test (Release configuration)

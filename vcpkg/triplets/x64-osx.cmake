@@ -7,4 +7,4 @@ if (PORT MATCHES "opencascade")
 endif ()
 
 set(VCPKG_CMAKE_SYSTEM_NAME Darwin)
-set(VCPKG_OSX_ARCHITECTURES x64)
+set(VCPKG_OSX_ARCHITECTURES x86_64)

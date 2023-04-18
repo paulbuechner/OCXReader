@@ -135,7 +135,7 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@v3
         with:
-          name: vcpkg-log-files-windows-latest
+          name: vcpkg-log-files-${{ matrix.os }}
           path: deps/vcpkg/buildtrees/**/*.log
 
       # Upload builds logs as artifacts.
@@ -143,7 +143,7 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@v3
         with:
-          name: builds-log-files-windows-latest
+          name: builds-log-files-${{ matrix.os }}
           path: builds/**/*.log
 
   build-windows:

@@ -14,15 +14,17 @@
 
 #include "ocx/internal/ocx-class-catalogue.h"
 
-#include "ocx/internal/ocx-x-section-catalogue.h"
+#include <LDOM_Element.hxx>
+
 #include "ocx/internal/ocx-hole-catalogue.h"
+#include "ocx/internal/ocx-x-section-catalogue.h"
 #include "ocx/ocx-helper.h"
 
 namespace ocx::reader::class_catalogue {
 
-void ReadClassCatalogue() {
-  LDOM_Element catalogueN = ocx::helper::GetFirstChild(
-      OCXContext::GetInstance()->OCXRoot(), "ClassCatalogue");
+void ReadClassCatalogue(LDOM_Element const &vesselN) {
+  LDOM_Element catalogueN =
+      ocx::helper::GetFirstChild(vesselN, "ClassCatalogue");
   if (catalogueN.isNull()) {
     OCX_ERROR("No ClassCatalogue child node found.")
     return;

@@ -16,12 +16,10 @@
 
 #include <BRep_Builder.hxx>
 #include <Quantity_Color.hxx>
-#include <Quantity_TypeOfColor.hxx>
 #include <TDataStd_Name.hxx>
 #include <TopoDS_Compound.hxx>
 #include <list>
 
-#include "ocx/internal/ocx-surface.h"
 #include "ocx/ocx-helper.h"
 
 namespace ocx::reader::vessel::reference_surfaces {

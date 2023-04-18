@@ -14,9 +14,10 @@
 
 #include "ocx/internal/ocx-surface.h"
 
+#include <occutils/occutils-wire.h>
+
 #include <BRepAdaptor_Surface.hxx>
 #include <BRepBuilderAPI_MakeFace.hxx>
-#include <BRepBuilderAPI_MakeShell.hxx>
 #include <BRepOffsetAPI_MakeOffsetShape.hxx>
 #include <BRepOffsetAPI_Sewing.hxx>
 #include <BRep_Tool.hxx>
@@ -26,8 +27,6 @@
 #include <TopoDS.hxx>
 #include <gp_Pln.hxx>
 
-#include "occutils/occutils-wire.h"
-#include "ocx/internal/ocx-curve.h"
 #include "ocx/internal/ocx-utils.h"
 #include "ocx/ocx-helper.h"
 

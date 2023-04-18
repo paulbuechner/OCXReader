@@ -14,6 +14,12 @@
 
 #include "ocx/internal/ocx-outer-contour.h"
 
+#include <occutils/occutils-shape.h>
+
+#include <LDOM_Element.hxx>
+#include <TopoDS_Shape.hxx>
+#include <magic_enum.hpp>
+
 namespace ocx::reader::shared::outer_contour {
 
 TopoDS_Wire ReadOuterContour(LDOM_Element const& elementN) {
@@ -38,7 +44,7 @@ TopoDS_Wire ReadOuterContour(LDOM_Element const& elementN) {
     OCX_ERROR(
         "OuterContour child node in element id={} guid={} is not of type "
         "TopoDS_Wire, expected a closed edge as OuterContour, but got {}",
-        meta->id, meta->guid, curveShape.ShapeType())
+        meta->id, meta->guid, magic_enum::enum_name(curveShape.ShapeType()))
     return {};
   }
 

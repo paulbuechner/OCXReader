@@ -14,7 +14,7 @@
 
 #include "ocx/internal/ocx-bar-section.h"
 
-#include <utility>
+#include <string>
 
 namespace ocx::context_entities {
 

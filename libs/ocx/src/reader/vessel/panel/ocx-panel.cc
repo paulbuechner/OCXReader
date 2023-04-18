@@ -20,8 +20,6 @@
 #include <TopoDS_Compound.hxx>
 #include <list>
 
-#include "occutils/occutils-boolean.h"
-#include "ocx/internal/ocx-cut-by.h"
 #include "ocx/internal/ocx-log.h"
 #include "ocx/internal/ocx-stiffened-by.h"
 #include "ocx/ocx-helper.h"

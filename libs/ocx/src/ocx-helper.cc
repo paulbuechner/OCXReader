@@ -14,6 +14,11 @@
 
 #include "ocx/ocx-helper.h"
 
+#include <occutils/occutils-face.h>
+#include <occutils/occutils-shape-components.h>
+#include <occutils/occutils-step-export.h>
+#include <occutils/occutils-surface.h>
+
 #include <BRepBuilderAPI_MakeEdge.hxx>
 #include <BRepBuilderAPI_MakeFace.hxx>
 #include <BRepBuilderAPI_Sewing.hxx>
@@ -30,10 +35,6 @@
 #include <string>
 #include <vector>
 
-#include "occutils/occutils-face.h"
-#include "occutils/occutils-shape-components.h"
-#include "occutils/occutils-step-export.h"
-#include "occutils/occutils-surface.h"
 #include "ocx/internal/ocx-utils.h"
 #include "ocx/ocx-context.h"
 

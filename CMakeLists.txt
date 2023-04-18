@@ -33,7 +33,7 @@ find_package(GTest CONFIG REQUIRED)
 # Resolve dependencies using git submodules
 get_filename_component(SUBMODULE_DIR ${CMAKE_CURRENT_LIST_DIR}/deps ABSOLUTE)
 
-# Packages
+# Local Packages
 add_subdirectory(libs/ocx)
 add_subdirectory(libs/shipxml)
 

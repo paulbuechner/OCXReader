@@ -14,12 +14,13 @@
 
 #include "ocx/internal/ocx-composed-of.h"
 
+#include <occutils/occutils-boolean.h>
+
 #include <BRep_Builder.hxx>
 #include <Quantity_Color.hxx>
 #include <TDataStd_Name.hxx>
 #include <TopoDS_Compound.hxx>
 
-#include "occutils/occutils-boolean.h"
 #include "ocx/internal/ocx-cut-by.h"
 #include "ocx/internal/ocx-unbounded-geometry.h"
 

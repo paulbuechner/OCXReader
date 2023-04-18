@@ -14,6 +14,8 @@
 
 #include "ocx/internal/ocx-coordinate-system.h"
 
+#include <occutils/occutils-wire.h>
+
 #include <BRepBuilderAPI_MakeFace.hxx>
 #include <BRep_Builder.hxx>
 #include <Geom_TrimmedCurve.hxx>
@@ -26,7 +28,6 @@
 #include <list>
 #include <magic_enum.hpp>
 
-#include "occutils/occutils-wire.h"
 #include "ocx/internal/ocx-vessel-grid-wrapper.h"
 #include "ocx/ocx-context.h"
 

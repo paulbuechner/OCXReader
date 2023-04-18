@@ -14,6 +14,8 @@
 
 #include "ocx/internal/ocx-cut-by.h"
 
+#include <occutils/occutils-boolean.h>
+
 #include <BRepBuilderAPI_Transform.hxx>
 #include <BRepPrimAPI_MakePrism.hxx>
 #include <BRep_Builder.hxx>
@@ -23,7 +25,6 @@
 #include <TopoDS_Compound.hxx>
 #include <vector>
 
-#include "occutils/occutils-boolean.h"
 #include "ocx/ocx-helper.h"
 
 namespace ocx::vessel::panel::cut_by {

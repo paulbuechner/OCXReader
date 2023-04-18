@@ -206,14 +206,12 @@ jobs:
       # store the built packages artifacts.
       - name: Restore from cache the dependencies and generate project files
         working-directory: C:/OCXReader
-        shell: bash
         run: |
           cmake --preset ocxreader-ninja-multiconfiguration-vcpkg-windows
 
       # Build (Release configuration only) the whole project with Ninja (which is spawn by CMake).
       - name: Build (Release configuration)
         working-directory: C:/OCXReader
-        shell: bash
         run: |
           cmake --build --preset ocxreader-ninja-multiconfiguration-vcpkg-windows --config Release
 

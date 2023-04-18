@@ -1,0 +1,11 @@
+{
+  "name": "occutils",
+  "version-string": "0.1.0",
+  "description": "OpenCASCADE utility library - algorithms and convenience functions",
+  "homepage": "https://github.com/paulbuechner/OCCUtils",
+  "dependencies": [
+    "opencascade",
+    "boost-system",
+    "boost-filesystem"
+  ]
+}

@@ -5,7 +5,7 @@ project(ocx VERSION ${OCXREADER_VERSION} LANGUAGES CXX)
 # Where ocx's .h files can be found
 set(ocx_include_dirs
     "${OpenCASCADE_INCLUDE_DIR}"
-    "${occutils_SOURCE_DIR}/include"
+    "${SUBMODULE_DIR}/OCCUtils/include"
     "${ocx_SOURCE_DIR}/include"
     "${ocx_SOURCE_DIR}")
 include_directories(SYSTEM ${ocx_include_dirs})
@@ -32,7 +32,7 @@ add_library(ocxreader::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
 # Set target link libraries
 target_link_libraries(${PROJECT_NAME}
-                      ocxreader::occutils
+                      occutils::occutils
                       spdlog::spdlog)
 
 # Adjust runtime environment for Visual Studio

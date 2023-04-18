@@ -20,7 +20,7 @@
         "ocx_build_tests": "ON"
       },
       "environment": {
-        "VCPKG_ROOT": "./vcpkg/vcpkg"
+        "VCPKG_ROOT": "./deps/vcpkg"
       }
     },
     {
@@ -37,7 +37,7 @@
         "ocx_build_tests": "ON"
       },
       "environment": {
-        "VCPKG_ROOT": "./vcpkg/vcpkg"
+        "VCPKG_ROOT": "./deps/vcpkg"
       }
     },
     {
@@ -55,7 +55,7 @@
         "VCPKG_INSTALL_OPTIONS": "--allow-unsupported"
       },
       "environment": {
-        "VCPKG_ROOT": "./vcpkg/vcpkg"
+        "VCPKG_ROOT": "./deps/vcpkg"
       }
     }
   ],

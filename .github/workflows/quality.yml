@@ -151,9 +151,9 @@ jobs:
     runs-on: windows-latest
     env:
       # Indicates the location of the vcpkg as a Git submodule of the project repository.
-      VCPKG_ROOT: C:/OCXReader/deps/vcpkg
+      VCPKG_ROOT: 'C:/OCXReader/deps/vcpkg'
       # Tells vcpkg where binary packages are stored.
-      VCPKG_DEFAULT_BINARY_CACHE: C:/OCXReader/deps/vcpkg/bincache
+      VCPKG_DEFAULT_BINARY_CACHE: 'C:/OCXReader/deps/vcpkg/bincache'
       # Let's use GitHub Action cache as storage for the vcpkg Binary Caching feature.
       VCPKG_BINARY_SOURCES: 'clear;x-gha,readwrite'
 

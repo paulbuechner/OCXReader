@@ -162,7 +162,7 @@ jobs:
         shell: bash
         run: |
           mkdir C:/OCXReader.git
-          git clone "https://github.com/${{ github.repository }}" C:/OCXReader.git
+          git clone --no-single-branch "https://github.com/${{ github.repository }}" C:/OCXReader.git
           cd C:/OCXReader.git
           git checkout ${{ github.sha }}
           git submodule update --init --recursive

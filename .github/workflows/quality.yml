@@ -136,7 +136,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: vcpkg-log-files-${{ matrix.os }}
-          path: deps/vcpkg/buildtrees/**/install-*-out.log
+          path: deps/vcpkg/buildtrees/**/*.log
 
   build-windows:
     name: windows-latest-${{ github.workflow }}
@@ -162,9 +162,9 @@ jobs:
         shell: bash
         run: |
           mkdir C:/OCXReader.git
-          git clone --no-single-branch "https://github.com/${{ github.repository }}.git" C:/OCXReader.git --depth 1
+          git clone --no-single-branch "https://github.com/${{ github.repository }}.git" C:/OCXReader.git
           cd C:/OCXReader.git
-          git checkout ${{ github.ref }}
+          git checkout ${{ github.head_ref }}
           git submodule update --init --recursive
 
       # Setup the build machine with the most recent versions of CMake and Ninja. Both are cached if not already: on subsequent runs both will be quickly restored from GitHub cache service.
@@ -223,4 +223,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: vcpkg-log-files-windows-latest
-          path: deps/vcpkg/buildtrees/**/install-*-out.log
+          path: deps/vcpkg/buildtrees/**/*.log

@@ -151,9 +151,9 @@ jobs:
     runs-on: windows-latest
     env:
       # Indicates the location of the vcpkg as a Git submodule of the project repository.
-      VCPKG_ROOT: C:/OCXReader.git/deps/vcpkg
+      VCPKG_ROOT: C:/OCXReader/deps/vcpkg
       # Tells vcpkg where binary packages are stored.
-      VCPKG_DEFAULT_BINARY_CACHE: C:/OCXReader.git/deps/vcpkg/bincache
+      VCPKG_DEFAULT_BINARY_CACHE: C:/OCXReader/deps/vcpkg/bincache
       # Let's use GitHub Action cache as storage for the vcpkg Binary Caching feature.
       VCPKG_BINARY_SOURCES: 'clear;x-gha,readwrite'
 
@@ -169,9 +169,8 @@ jobs:
       - name: Checkout Repository
         shell: bash
         run: |
-          mkdir C:/OCXReader.git
-          git clone --no-single-branch "https://github.com/${{ github.repository }}.git" C:/OCXReader.git
-          cd C:/OCXReader.git
+          git clone --no-single-branch "https://github.com/${{ github.repository }}" C:/OCXReader
+          cd C:/OCXReader
           git checkout ${{ github.head_ref }}
           git submodule update --init --recursive
 
@@ -206,21 +205,21 @@ jobs:
       # This step also runs vcpkg with Binary Caching leveraging GitHub Action cache to
       # store the built packages artifacts.
       - name: Restore from cache the dependencies and generate project files
-        working-directory: C:/OCXReader.git
+        working-directory: C:/OCXReader
         shell: bash
         run: |
           cmake --preset ocxreader-ninja-multiconfiguration-vcpkg-windows
 
       # Build (Release configuration only) the whole project with Ninja (which is spawn by CMake).
       - name: Build (Release configuration)
-        working-directory: C:/OCXReader.git
+        working-directory: C:/OCXReader
         shell: bash
         run: |
           cmake --build --preset ocxreader-ninja-multiconfiguration-vcpkg-windows --config Release
 
       # Test the whole project with CTest, again Release configuration only.
       #      - name: Test (Release configuration)
-      #        working-directory: C:/OCXReader.git
+      #        working-directory: C:/OCXReader
       #        shell: bash
       #        run: |
       #          ctest --preset ocxreader-ninja-multiconfiguration-vcpkg-windows --config Release

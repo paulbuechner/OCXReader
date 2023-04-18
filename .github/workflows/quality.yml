@@ -220,7 +220,6 @@ jobs:
       # Upload logs (vcpkg's logs and CMake's logs) as artifacts.
       - name: Upload vcpkg build log files
         if: failure()
-        working-directory: C:/OCXReader.git
         uses: actions/upload-artifact@v3
         with:
           name: vcpkg-log-files-windows-latest

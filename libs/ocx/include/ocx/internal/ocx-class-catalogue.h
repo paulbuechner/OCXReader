@@ -15,12 +15,11 @@
 #ifndef OCX_INCLUDE_OCX_INTERNAL_OCX_CLASS_CATALOGUE_READER_H_
 #define OCX_INCLUDE_OCX_INTERNAL_OCX_CLASS_CATALOGUE_READER_H_
 
-#include "ocx/internal/ocx-utils.h"
-#include "ocx/ocx-context.h"
+#include <LDOM_Element.hxx>
 
 namespace ocx::reader::class_catalogue {
 
-void ReadClassCatalogue();
+void ReadClassCatalogue(LDOM_Element const &vesselN);
 
 }  // namespace ocx::reader::class_catalogue
 

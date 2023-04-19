@@ -14,8 +14,9 @@
 
 #include "ocx/ocx-helper.h"
 
-#include "BSplCLib.hxx"
-#include "gtest/gtest.h"
+#include <gtest/gtest.h>
+
+#include <BSplCLib.hxx>
 
 TEST(OCXHelperTest, ParseKnotVector) {
   struct TestCase {

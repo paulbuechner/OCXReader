@@ -14,9 +14,6 @@
 
 #include "ocx/internal/ocx-vessel-grid-wrapper.h"
 
-#include <Standard_Integer.hxx>
-#include <Standard_Real.hxx>
-
 namespace ocx::context_entities {
 
 SpacingGroup::SpacingGroup(Standard_Integer const &firstGridNumber,

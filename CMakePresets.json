@@ -1,0 +1,99 @@
+{
+  "version": 3,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 24,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "ocxreader-ninja-multiconfiguration-vcpkg-windows",
+      "displayName": "OCXReader Windows Ninja Multi-Config",
+      "description": "Configure with vcpkg toolchain and generate Ninja project files for all configurations",
+      "binaryDir": "${sourceDir}/builds/${presetName}",
+      "generator": "Ninja Multi-Config",
+      "cacheVariables": {
+        "CMAKE_TOOLCHAIN_FILE": {
+          "type": "FILEPATH",
+          "value": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+        },
+        "ocx_build_tests": "ON"
+      },
+      "environment": {
+        "VCPKG_ROOT": "./deps/vcpkg"
+      }
+    },
+    {
+      "name": "ocxreader-ninja-multiconfiguration-vcpkg-ubuntu",
+      "displayName": "OCXReader Ubuntu Ninja Multi-Config",
+      "description": "Configure with vcpkg toolchain and generate Ninja project files for all configurations",
+      "binaryDir": "${sourceDir}/builds/${presetName}",
+      "generator": "Ninja Multi-Config",
+      "cacheVariables": {
+        "CMAKE_TOOLCHAIN_FILE": {
+          "type": "FILEPATH",
+          "value": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+        },
+        "ocx_build_tests": "ON"
+      },
+      "environment": {
+        "VCPKG_ROOT": "./deps/vcpkg"
+      }
+    },
+    {
+      "name": "ocxreader-ninja-multiconfiguration-vcpkg-macos",
+      "displayName": "OCXReader MacOS Ninja Multi-Config",
+      "description": "Configure with vcpkg toolchain and generate Ninja project files for all configurations",
+      "binaryDir": "${sourceDir}/builds/${presetName}",
+      "generator": "Ninja Multi-Config",
+      "cacheVariables": {
+        "CMAKE_TOOLCHAIN_FILE": {
+          "type": "FILEPATH",
+          "value": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+        },
+        "ocx_build_tests": "ON",
+        "VCPKG_INSTALL_OPTIONS": "--allow-unsupported"
+      },
+      "environment": {
+        "VCPKG_ROOT": "./deps/vcpkg"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "ocxreader-ninja-multiconfiguration-vcpkg-windows",
+      "configurePreset": "ocxreader-ninja-multiconfiguration-vcpkg-windows",
+      "displayName": "Build ocxreader-ninja-multiconfiguration-vcpkg-windows",
+      "description": "Build with Ninja the configuration specified with --config"
+    },
+    {
+      "name": "ocxreader-ninja-multiconfiguration-vcpkg-ubuntu",
+      "configurePreset": "ocxreader-ninja-multiconfiguration-vcpkg-ubuntu",
+      "displayName": "Build ocxreader-ninja-multiconfiguration-vcpkg-ubuntu",
+      "description": "Build with Ninja the configuration specified with --config"
+    },
+    {
+      "name": "ocxreader-ninja-multiconfiguration-vcpkg-macos",
+      "configurePreset": "ocxreader-ninja-multiconfiguration-vcpkg-macos",
+      "displayName": "Build ocxreader-ninja-multiconfiguration-vcpkg-macos",
+      "description": "Build with Ninja the configuration specified with --config"
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "ocxreader-ninja-multiconfiguration-vcpkg-windows",
+      "configurePreset": "ocxreader-ninja-multiconfiguration-vcpkg-windows",
+      "description": "Test with Ninja the provided configuration with --config on Windows"
+    },
+    {
+      "name": "ocxreader-ninja-multiconfiguration-vcpkg-ubuntu",
+      "configurePreset": "ocxreader-ninja-multiconfiguration-vcpkg-ubuntu",
+      "description": "Test with Ninja the provided configuration with --config on Ubuntu"
+    },
+    {
+      "name": "ocxreader-ninja-multiconfiguration-vcpkg-macos",
+      "configurePreset": "ocxreader-ninja-multiconfiguration-vcpkg-macos",
+      "description": "Test with Ninja the provided configuration with --config on MacOS"
+    }
+  ]
+}

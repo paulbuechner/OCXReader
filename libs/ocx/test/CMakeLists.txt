@@ -7,10 +7,10 @@ include(cmake/internal_utils.cmake)
 
 # Set libs to link against
 list(APPEND ocx_test_libs
-     ocxreader::ocx
+     ${OpenCASCADE_LIBRARIES}
      GTest::gtest
      GTest::gtest_main
-     ${OpenCASCADE_LIBRARIES})
+     ocxreader::ocx)
 
 # Add executable
 cxx_executable("ocx-all-test" src "${ocx_test_libs}")

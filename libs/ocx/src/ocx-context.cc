@@ -14,6 +14,8 @@
 
 #include "ocx/ocx-context.h"
 
+#include <occutils/occutils-shape.h>
+
 #include <LDOM_Element.hxx>
 #include <TDocStd_Document.hxx>
 #include <UnitsAPI.hxx>
@@ -21,7 +23,6 @@
 #include <memory>
 #include <utility>
 
-#include "occutils/occutils-shape.h"
 #include "ocx/internal/ocx-bar-section.h"
 #include "ocx/internal/ocx-exceptions.h"
 #include "ocx/internal/ocx-refplane-wrapper.h"

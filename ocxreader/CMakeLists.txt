@@ -4,8 +4,8 @@ project(ocxreader VERSION ${OCXREADER_VERSION} LANGUAGES CXX)
 
 # Where ocxreader's .h files can be found
 set(ocxreader_include_dirs
-    "${SUBMODULE_DIR}/spdlog_setup/include"
     "${OpenCASCADE_INCLUDE_DIR}"
+    "${SUBMODULE_DIR}/spdlog_setup/include"
     "${ocx_SOURCE_DIR}/include"
     "${shipxml_SOURCE_DIR}/include"
     "${ocxreader_SOURCE_DIR}/include"

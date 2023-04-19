@@ -14,10 +14,9 @@
 
 #include "ocx/internal/ocx-x-section-catalogue.h"
 
+#include <LDOM_Element.hxx>
 #include <memory>
 
-#include "LDOM_Element.hxx"
-#include "ocx/internal/ocx-utils.h"
 #include "ocx/ocx-helper.h"
 
 namespace ocx::reader::class_catalogue::x_section_catalogue {

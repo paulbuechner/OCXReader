@@ -19,7 +19,6 @@
 #include <TDataStd_Name.hxx>
 #include <TopoDS_Compound.hxx>
 
-#include "ocx/internal/ocx-curve.h"
 #include "ocx/ocx-helper.h"
 
 namespace ocx::reader::vessel::panel::stiffened_by {

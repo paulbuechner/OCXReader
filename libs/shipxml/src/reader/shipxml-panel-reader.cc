@@ -14,6 +14,9 @@
 
 #include "shipxml/internal/shipxml-panel-reader.h"
 
+#include <occutils/occutils-shape-components.h>
+#include <occutils/occutils-surface.h>
+
 #include <BRepAdaptor_Surface.hxx>
 #include <Geom_Plane.hxx>
 #include <chrono>
@@ -21,8 +24,6 @@
 #include <random>
 #include <utility>
 
-#include "occutils/occutils-shape-components.h"
-#include "occutils/occutils-surface.h"
 #include "ocx/ocx-helper.h"
 #include "shipxml/internal/shipxml-enums.h"
 #include "shipxml/internal/shipxml-limit.h"

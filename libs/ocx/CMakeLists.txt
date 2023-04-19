@@ -5,7 +5,6 @@ project(ocx VERSION ${OCXREADER_VERSION} LANGUAGES CXX)
 # Where ocx's .h files can be found
 set(ocx_include_dirs
     "${OpenCASCADE_INCLUDE_DIR}"
-    "${SUBMODULE_DIR}/OCCUtils/include"
     "${ocx_SOURCE_DIR}/include"
     "${ocx_SOURCE_DIR}")
 include_directories(SYSTEM ${ocx_include_dirs})

@@ -5,7 +5,6 @@ project(shipxml VERSION ${OCXREADER_VERSION} LANGUAGES CXX)
 # Where shipxml's .h files can be found
 set(shipxml_include_dirs
     "${OpenCASCADE_INCLUDE_DIR}"
-    "${SUBMODULE_DIR}/OCCUtils/include"
     "${ocx_SOURCE_DIR}/include"
     "${shipxml_SOURCE_DIR}/include"
     "${shipxml_SOURCE_DIR}")

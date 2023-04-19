@@ -30,12 +30,12 @@ endif ()
 
 # Set libs to link against
 list(APPEND ocxreader_libs
-     ocxreader::ocx
-     ocxreader::shipxml
+     ${OpenCASCADE_LIBRARIES}
      spdlog::spdlog
      Boost::boost
      Boost::program_options
-     ${OpenCASCADE_LIBRARIES})
+     ocxreader::ocx
+     ocxreader::shipxml)
 
 # Add executable
 cxx_executable(${PROJECT_NAME} src "${ocxreader_libs}")

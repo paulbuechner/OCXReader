@@ -32,12 +32,12 @@ list(APPEND ocxreader_libs
 cxx_executable(${PROJECT_NAME} src "${ocxreader_libs}")
 
 # Add target_include_directories
-target_include_directories(${PROJECT_NAME} PRIVATE SYSTEM
+target_include_directories(${PROJECT_NAME} SYSTEM PRIVATE
                            ${OpenCASCADE_INCLUDE_DIR}
+                           "${SUBMODULE_DIR}/spdlog_setup/include"
                            )
 
 target_include_directories(${PROJECT_NAME} PRIVATE
-                           "${SUBMODULE_DIR}/spdlog_setup/include"
                            "${ocxreader_SOURCE_DIR}/include"
                            "${ocxreader_SOURCE_DIR}"
                            )

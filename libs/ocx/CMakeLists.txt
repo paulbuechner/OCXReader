@@ -14,9 +14,12 @@ add_compile_definitions(
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}
-      -Wno-error=unused-variable -Wunused-variable
-      -Wno-error=unused-parameter -Wunused-parameter")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
+  -Wno-error=sign-compare \
+  -Wno-error=unused-variable \
+  -Wno-error=unused-parameter \
+  -Wno-error=unused-function"
+    )
 
 if (CMAKE_SYSTEM_NAME MATCHES "CYGWIN" OR CMAKE_SYSTEM_NAME MATCHES "MSYS")
   set(CMAKE_CXX_EXTENSIONS ON)
@@ -27,7 +30,7 @@ cxx_library(${PROJECT_NAME} src/ocx-all.cc)
 add_library(ocxreader::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
 # Add target_include_directories
-target_include_directories(${PROJECT_NAME} PRIVATE SYSTEM
+target_include_directories(${PROJECT_NAME} SYSTEM PRIVATE
                            ${OpenCASCADE_INCLUDE_DIR}
                            )
 

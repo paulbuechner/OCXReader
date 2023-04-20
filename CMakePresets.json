@@ -17,7 +17,7 @@
           "type": "FILEPATH",
           "value": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
         },
-        "ocx_build_tests": "ON"
+        "OCX_BUILD_TESTS": "ON"
       },
       "environment": {
         "VCPKG_ROOT": "./deps/vcpkg"
@@ -34,7 +34,7 @@
           "type": "FILEPATH",
           "value": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
         },
-        "ocx_build_tests": "ON"
+        "OCX_BUILD_TESTS": "ON"
       },
       "environment": {
         "VCPKG_ROOT": "./deps/vcpkg"
@@ -51,7 +51,7 @@
           "type": "FILEPATH",
           "value": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
         },
-        "ocx_build_tests": "ON",
+        "OCX_BUILD_TESTS": "ON",
         "VCPKG_INSTALL_OPTIONS": "--allow-unsupported"
       },
       "environment": {

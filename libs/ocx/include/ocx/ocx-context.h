@@ -205,7 +205,7 @@ class OCXContext {
   [[nodiscard]] opencascade::handle<XCAFDoc_ColorTool> OCAFColorTool() const;
 
  private:
-  SHARED_PTR_CREATE(OCXContext);
+  SHARED_PTR_CREATE(OCXContext)
   OCXContext(LDOM_Element const &root, std::string nsPrefix);
 
   /**

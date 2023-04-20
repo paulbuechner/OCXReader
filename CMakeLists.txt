@@ -1,8 +1,7 @@
 cmake_minimum_required(VERSION 3.24 FATAL_ERROR)
 
-option(ocx_build_tests "Build OCX tests." OFF)
-option(occutils_build_tests "Build OCCUtils tests." OFF)
-if (ocx_build_tests OR occutils_build_tests)
+option(OCX_BUILD_TESTS "Build OCX tests." OFF)
+if (OCX_BUILD_TESTS)
   list(APPEND VCPKG_MANIFEST_FEATURES "tests")
 endif ()
 

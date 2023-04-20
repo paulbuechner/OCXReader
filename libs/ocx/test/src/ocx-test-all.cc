@@ -16,6 +16,6 @@
 // purpose is to allow a user to build ocx-test by compiling this
 // file alone.
 
-// The following lines pull in the real ocx-*-test.cc files.
+// The following lines pull in the real ocx-test-*.cc files.
 
-#include "test/src/ocx-helper-test.cc"
+#include "ocx-test-helper.cc"

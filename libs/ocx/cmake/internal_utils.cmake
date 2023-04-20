@@ -68,6 +68,8 @@ function (target_enable_warnings target_name)
     -Wconversion
     -pedantic
     -Werror
-    -Wfatal-errors>
+    -Wfatal-errors
+    -Wno-error=unused-parameter  # TODO: remove this once we fix all warnings
+    -Wno-error=unused-function>  # TODO: remove this once we fix all warnings
     $<$<CXX_COMPILER_ID:MSVC>:${MSVC_OPTIONS}>)
 endfunction ()

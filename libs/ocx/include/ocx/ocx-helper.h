@@ -86,7 +86,7 @@ std::string GetLocalTagName(LDOM_Element const &elem, bool keepPrefix = false);
 
 std::string GetLocalAttrName(LDOM_Node const &node);
 
-std::string GetAttrValue(LDOM_Element const &element, std::string const &name);
+std::string GetAttrValue(LDOM_Element const &element, std::string_view name);
 
 std::string GetChildTagName(LDOM_Element const &parent,
                             bool keepPrefix = false);
@@ -121,7 +121,7 @@ gp_Pnt ReadPoint(LDOM_Element const &pointN);
 
 gp_Dir ReadDirection(LDOM_Element const &dirN);
 
-gp_Trsf ReadTransformation(LDOM_Element transfEle);
+gp_Trsf ReadTransformation(LDOM_Element const &transfEle);
 
 double ReadDimension(LDOM_Element const &valueN);
 
@@ -134,7 +134,8 @@ double ReadDimension(LDOM_Element const &valueN);
  * @return a struct containing the knot values and their corresponding
  * multiplicities
  */
-KnotMults ParseKnotVector(std::string_view knotVectorS, int const &numKnots);
+KnotMults ParseKnotVector(std::string_view knotVectorS,
+                          std::size_t const &numKnots);
 
 /**
  * Read the poles and weights of a NURBS curve

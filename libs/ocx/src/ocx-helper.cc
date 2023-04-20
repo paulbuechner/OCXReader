@@ -43,14 +43,10 @@ namespace ocx::helper {
 std::unique_ptr<OCXMeta> GetOCXMeta(LDOM_Element const &element) {
   if (element.isNull()) return nullptr;
 
-  char const *name = element.getAttribute("name").GetString();
-
-  char const *id = element.getAttribute("id").GetString();
-
-  char const *localRef = element.getAttribute("localRef").GetString();
-
-  char const *guid = element.getAttribute("ocx:GUIDRef").GetString();
-
+  auto name = element.getAttribute("name").GetString();
+  auto id = element.getAttribute("id").GetString();
+  auto localRef = element.getAttribute("localRef").GetString();
+  auto guid = element.getAttribute("ocx:GUIDRef").GetString();
   std::string refType = element.getAttribute("ocx:refType").GetString();
   if (!refType.empty()) {
     if (std::size_t idx = refType.find(':'); idx != std::string::npos) {
@@ -84,7 +80,7 @@ std::string GetLocalAttrName(LDOM_Node const &elem) {
 
 //-----------------------------------------------------------------------------
 
-std::string GetAttrValue(LDOM_Element const &element, std::string const &name) {
+std::string GetAttrValue(LDOM_Element const &element, std::string_view name) {
   auto attributes = element.GetAttributesList();
   for (int i = 0; i < attributes.getLength(); i++) {
     LDOM_Node node = attributes.item(i);
@@ -198,7 +194,7 @@ gp_Pnt ReadPoint(LDOM_Element const &pointN) {
 
 //-----------------------------------------------------------------------------
 
-gp_Trsf ReadTransformation(LDOM_Element transfEle) {
+gp_Trsf ReadTransformation(LDOM_Element const &transfEle) {
   gp_Trsf localToGlobalTrsf;
 
   LDOM_Element originEle = GetFirstChild(transfEle, "Origin");
@@ -252,7 +248,8 @@ gp_Dir ReadDirection(const LDOM_Element &dirN) {
 
 //-----------------------------------------------------------------------------
 
-KnotMults ParseKnotVector(std::string_view knotVectorS, int const &numKnots) {
+KnotMults ParseKnotVector(std::string_view knotVectorS,
+                          std::size_t const &numKnots) {
   auto kn = KnotMults();
 
   std::vector<std::string> out;
@@ -273,7 +270,7 @@ KnotMults ParseKnotVector(std::string_view knotVectorS, int const &numKnots) {
   // Get the quantity of knots and their multiplicities values
   double lastKnot{};
   int mult{};
-  for (int i = 0; i < out.size(); i++) {
+  for (std::size_t i = 0; i < out.size(); i++) {
     double knotValue = std::stod(out[i]);
     // First knot value
     if (i == 0) {
@@ -298,13 +295,13 @@ KnotMults ParseKnotVector(std::string_view knotVectorS, int const &numKnots) {
   }
 
   // Resize the knot and multiplicity arrays to the needed size
-  kn.knots.Resize(1, (int)knots0.size(), false);
-  kn.mults.Resize(1, (int)mults0.size(), false);
+  kn.knots.Resize(1, static_cast<int>(knots0.size()), false);
+  kn.mults.Resize(1, static_cast<int>(mults0.size()), false);
 
   // Set the knot and multiplicity values
-  for (int i = 0; i < knots0.size(); i++) {
-    kn.knots.SetValue(i + 1, knots0[i]);
-    kn.mults.SetValue(i + 1, mults0[i]);
+  for (std::size_t i = 0; i < knots0.size(); i++) {
+    kn.knots.SetValue(static_cast<int>(i) + 1, knots0[i]);
+    kn.mults.SetValue(static_cast<int>(i) + 1, mults0[i]);
   }
 
   return kn;

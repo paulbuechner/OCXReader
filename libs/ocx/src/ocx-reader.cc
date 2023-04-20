@@ -132,10 +132,15 @@ Standard_Boolean OCXReader::Parse(Handle(TDocStd_Document) & doc,
       OCXContext::GetInstance()->OCXRoot(), "Header");
   TDataStd_Name::Set(doc->Main(), header.getAttribute("name").GetString());
 
+  // TODO: See STEPCAFControl_Reader::Transfer
+  Message_ProgressScope aPSRoot(theProgress, nullptr, 2);
+
   // TODO: Read ClassCatalogue
+  aPSRoot.Next();
 
   // Read Vessel elements TODO: Should return Standard_Boolean
   ocx::reader::vessel::ReadVessel();
+  aPSRoot.Next();
 
   return Standard_True;
 }

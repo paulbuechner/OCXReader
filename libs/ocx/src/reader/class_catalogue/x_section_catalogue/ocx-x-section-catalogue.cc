@@ -92,8 +92,8 @@ void ReadFlatBar(LDOM_Element const &barSectionN) {
     return;
   }
 
-  double height = ocx::helper::ReadDimension(heightElement);
-  double width = ocx::helper::ReadDimension(widthElement);
+  // double height = ocx::helper::ReadDimension(heightElement);
+  // double width = ocx::helper::ReadDimension(widthElement);
 
   // BarSection flatBar = BarSection::FlatBar(height, width);
 

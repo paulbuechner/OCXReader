@@ -12,11 +12,11 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "ocx/ocx-helper.h"
-
 #include <gtest/gtest.h>
 
 #include <BSplCLib.hxx>
+
+#include "ocx/ocx-helper.h"
 
 TEST(OCXHelperTest, ParseKnotVector) {
   struct TestCase {
@@ -72,5 +72,3 @@ TEST(OCXHelperTest, ParseKnotVectorIsNull) {
       << "Expected knots to NOT be parsed successfully, but got knots.IsNull = "
       << knots.IsNull;
 }
-
-TEST(OCXHelperTest, ParseControlPoints) {}

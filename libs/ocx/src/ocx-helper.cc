@@ -248,18 +248,18 @@ gp_Dir ReadDirection(const LDOM_Element &dirN) {
 
 //-----------------------------------------------------------------------------
 
-KnotMults ParseKnotVector(std::string_view knotVectorS,
-                          std::size_t const &numKnots) {
+KnotMults ParseKnotVector(std::string_view knotVectorS, int numKnots) {
   auto kn = KnotMults();
 
   std::vector<std::string> out;
   ocx::utils::Tokenize(knotVectorS, out);
 
-  if (numKnots != out.size()) {
+  if (auto size_numKnots = static_cast<size_t>(numKnots);
+      size_numKnots != out.size()) {
     OCX_ERROR(
         "Knot vector size mismatch. Expected {} knot values when parsing [{}], "
         "but got {}",
-        numKnots, knotVectorS, out.size())
+        size_numKnots, knotVectorS, out.size())
     kn.IsNull = true;
     return kn;
   }
@@ -449,8 +449,8 @@ TopoDS_Shape LimitShapeByWire(TopoDS_Shape const &shape,
     } catch (Standard_Failure const &e) {
       OCX_ERROR(
           "Failed to create restricted Shape from given Surface and "
-          "OuterContour in id={} guid={}",
-          id, guid)
+          "OuterContour in id={} guid={}. Error: {}",
+          id, guid, e.GetMessageString())
       return {};
     }
   }

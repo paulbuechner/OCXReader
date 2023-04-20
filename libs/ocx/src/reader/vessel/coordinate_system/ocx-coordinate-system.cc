@@ -18,9 +18,7 @@
 
 #include <BRepBuilderAPI_MakeFace.hxx>
 #include <BRep_Builder.hxx>
-#include <Geom_TrimmedCurve.hxx>
 #include <Quantity_Color.hxx>
-#include <Standard_Integer.hxx>
 #include <TDataStd_Name.hxx>
 #include <TopExp_Explorer.hxx>
 #include <TopoDS_Compound.hxx>
@@ -300,13 +298,13 @@ void ReadVesselGrid(LDOM_Element const &vesselGridN) {
           continue;
         }
 
-        Standard_Integer firstGridNumber, count;
+        int firstGridNumber = 0, count = 0;
 
         ocx::helper::GetIntegerAttribute(childN, "firstGridNumber",
                                          firstGridNumber);
         ocx::helper::GetIntegerAttribute(childN, "count", count);
 
-        Standard_Real gridPosition, spacing;
+        double gridPosition = 0.0, spacing = 0.0;
 
         if (LDOM_Element gridPositionN =
                 ocx::helper::GetFirstChild(childN, "GridPosition");

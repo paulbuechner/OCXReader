@@ -106,7 +106,7 @@ std::vector<ArcSegment> ReadNURBS3D(const LDOM_Element& nurbs3DN,
   auto meta = ocx::helper::GetOCXMeta(nurbs3DN);
 
   SHIPXML_DEBUG("    ReadNURBS3D {} on  {}", meta->id,
-                magic_enum::enum_name(amCurve.GetSystem()).data());
+                magic_enum::enum_name(amCurve.GetSystem()).data())
 
   LDOM_Element propsN = ocx::helper::GetFirstChild(nurbs3DN, "NURBSproperties");
   if (propsN.isNull()) {
@@ -116,7 +116,7 @@ std::vector<ArcSegment> ReadNURBS3D(const LDOM_Element& nurbs3DN,
     return {};
   }
 
-  int degree{}, numCtrlPoints{}, numKnots{};
+  int degree = 0, numCtrlPoints = 0, numKnots = 0;
   propsN.getAttribute("degree").GetInteger(degree);
   propsN.getAttribute("numCtrlPts").GetInteger(numCtrlPoints);
   propsN.getAttribute("numKnots").GetInteger(numKnots);

@@ -368,7 +368,7 @@ TopoDS_Edge ReadCircumArc3D(LDOM_Element const &circleN) {
   gp_Pnt intermediate = ocx::helper::ReadPoint(intN);
   gp_Pnt end = ocx::helper::ReadPoint(endN);
 
-  Handle(Geom_TrimmedCurve) arc = GC_MakeArcOfCircle(start, intermediate, end );
+  Handle(Geom_TrimmedCurve) arc = GC_MakeArcOfCircle(start, intermediate, end);
 
   return BRepBuilderAPI_MakeEdge(arc);
 }
@@ -414,7 +414,7 @@ TopoDS_Shape ReadNURBS3D(LDOM_Element const &nurbs3DN) {
     return {};
   }
 
-  int degree{}, numCtrlPoints{}, numKnots{};
+  int degree = 0, numCtrlPoints = 0, numKnots = 0;
   propsN.getAttribute("degree").GetInteger(degree);
   propsN.getAttribute("numCtrlPts").GetInteger(numCtrlPoints);
   propsN.getAttribute("numKnots").GetInteger(numKnots);

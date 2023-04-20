@@ -134,8 +134,7 @@ double ReadDimension(LDOM_Element const &valueN);
  * @return a struct containing the knot values and their corresponding
  * multiplicities
  */
-KnotMults ParseKnotVector(std::string_view knotVectorS,
-                          std::size_t const &numKnots);
+KnotMults ParseKnotVector(std::string_view knotVectorS, int numKnots);
 
 /**
  * Read the poles and weights of a NURBS curve

@@ -226,7 +226,7 @@ TopoDS_Face ReadNURBSSurface(LDOM_Element const &nurbsSrfN) {
     return {};
   }
 
-  int uDegree{}, uNumCtrlPoints{}, uNumKnots{};
+  int uDegree = 0, uNumCtrlPoints = 0, uNumKnots = 0;
   uPropsN.getAttribute("degree").GetInteger(uDegree);
   uPropsN.getAttribute("numCtrlPts").GetInteger(uNumCtrlPoints);
   uPropsN.getAttribute("numKnots").GetInteger(uNumKnots);
@@ -253,7 +253,7 @@ TopoDS_Face ReadNURBSSurface(LDOM_Element const &nurbsSrfN) {
     return {};
   }
 
-  int vDegree{}, vNumCtrlPoints{}, vNumKnots{};
+  int vDegree = 0, vNumCtrlPoints = 0, vNumKnots = 0;
   vPropsN.getAttribute("degree").GetInteger(vDegree);
   vPropsN.getAttribute("numCtrlPts").GetInteger(vNumCtrlPoints);
   vPropsN.getAttribute("numKnots").GetInteger(vNumKnots);

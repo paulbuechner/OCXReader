@@ -55,6 +55,7 @@ endfunction ()
 function (target_enable_warnings target_name)
   if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     list(APPEND MSVC_OPTIONS "/W4")
+    list(APPEND MSVC_OPTIONS "/wd4100") # TODO: remove this once we fix all warnings
     if (MSVC_VERSION GREATER 1900) # Allow non fatal security warnings for msvc 2015
       list(APPEND MSVC_OPTIONS "/WX")
     endif ()

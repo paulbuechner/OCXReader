@@ -2,6 +2,33 @@ cmake_minimum_required(VERSION 3.24 FATAL_ERROR)
 
 project(shipxml VERSION ${OCXREADER_VERSION} LANGUAGES CXX)
 
+# Needed to set the namespace for both the export targets and the
+# alias libraries
+set(cmake_package_name ocxreader CACHE INTERNAL "")
+
+# Set default build to release
+if (NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Choose Release or Debug" FORCE)
+endif ()
+
+# Compiler config
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+if (CMAKE_SYSTEM_NAME MATCHES "CYGWIN" OR CMAKE_SYSTEM_NAME MATCHES "MSYS")
+  set(CMAKE_CXX_EXTENSIONS ON)
+endif ()
+
+# These commands only run if this is the main project
+if (CMAKE_PROJECT_NAME STREQUAL "shipxml")
+  # BUILD_SHARED_LIBS is a standard CMake variable, but we declare it here to
+  # make it prominent in the GUI.
+  option(BUILD_SHARED_LIBS "Build shared libraries (DLLs)." OFF)
+endif ()
+
+# warning options
+option(SHIPXML_BUILD_WARNINGS "Enable compiler warnings" OFF)
+
 # Define helper functions and macros used by ocx
 include(cmake/internal_utils.cmake)
 
@@ -11,33 +38,16 @@ add_compile_definitions(
   $<$<CONFIG:RELEASE>:SHIPXML_CONFIG_RELEASE>
 )
 
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
-  -Wno-error=sign-compare \
-  -Wno-error=unused-variable \
-  -Wno-error=unused-parameter \
-  -Wno-error=unused-function"
-    )
-
-if (CMAKE_SYSTEM_NAME MATCHES "CYGWIN" OR CMAKE_SYSTEM_NAME MATCHES "MSYS")
-  set(CMAKE_CXX_EXTENSIONS ON)
-endif ()
-
 cxx_library(${PROJECT_NAME} src/shipxml-all.cc)
-
-add_library(ocxreader::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
 # Add target_include_directories
 target_include_directories(${PROJECT_NAME} SYSTEM PRIVATE
                            ${OpenCASCADE_INCLUDE_DIR}
                            )
 
-target_include_directories(${PROJECT_NAME} PUBLIC
-                           "${shipxml_SOURCE_DIR}/include"
-                           "${shipxml_SOURCE_DIR}"
-                           )
+if (SHIPXML_BUILD_WARNINGS)
+  target_enable_warnings(${PROJECT_NAME})
+endif ()
 
 # If the CMake version supports it, attach header directory information
 # to the targets for when we are part of a parent build (ie being pulled

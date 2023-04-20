@@ -2,6 +2,22 @@ cmake_minimum_required(VERSION 3.24 FATAL_ERROR)
 
 project(ocxreader VERSION ${OCXREADER_VERSION} LANGUAGES CXX)
 
+# Set default build to release
+if (NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Choose Release or Debug" FORCE)
+endif ()
+
+# Compiler config
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+if (CMAKE_SYSTEM_NAME MATCHES "CYGWIN" OR CMAKE_SYSTEM_NAME MATCHES "MSYS")
+  set(CMAKE_CXX_EXTENSIONS ON)
+endif ()
+
+# warning options
+option(OCX_BUILD_WARNINGS "Enable compiler warnings" OFF)
+
 # Define helper functions and macros used by ocxreader
 include(cmake/internal_utils.cmake)
 
@@ -10,14 +26,6 @@ add_compile_definitions(
   $<$<CONFIG:DEBUG>:OCXREADER_CONFIG_DEBUG>
   $<$<CONFIG:RELEASE>:OCXREADER_CONFIG_RELEASE>
 )
-
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
-
-if (CMAKE_SYSTEM_NAME MATCHES "CYGWIN" OR CMAKE_SYSTEM_NAME MATCHES "MSYS")
-  set(CMAKE_CXX_EXTENSIONS ON)
-endif ()
 
 # Set libs to link against
 list(APPEND ocxreader_libs

@@ -5,14 +5,6 @@ project(ocx-test VERSION ${OCXREADER_VERSION} LANGUAGES CXX)
 # Define helper functions and macros used by ocx-test
 include(cmake/internal_utils.cmake)
 
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
-
-if (CMAKE_SYSTEM_NAME MATCHES "CYGWIN" OR CMAKE_SYSTEM_NAME MATCHES "MSYS")
-  set(CMAKE_CXX_EXTENSIONS ON)
-endif ()
-
 # Set libs to link against
 list(APPEND ocx_test_libs
      ocxreader::ocx

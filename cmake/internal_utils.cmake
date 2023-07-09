@@ -11,6 +11,9 @@ function (build_3rd_party_copyright)
   # Handle duplicate copyright files
   remove_duplicate_by_file_content("${COPYRIGHT_FILES}" "COPYRIGHT_FILES" "Boost Software License")
 
+  # Exclude libraries by name
+  set(EXCLUDED_LIBRARIES "vcpkg-*")
+
   foreach (copyright_file ${COPYRIGHT_FILES})
     string(REGEX MATCH ".*/(.*)/copyright" _ ${copyright_file})
     if ("${CMAKE_MATCH_1}" STREQUAL "")
@@ -18,9 +21,22 @@ function (build_3rd_party_copyright)
     endif ()
     set(LIBRARY_NAME ${CMAKE_MATCH_1})
 
-    file(APPEND ${LICENSE_3RD_PARTY_FILE} "-------------------------------------------------\n")
+    # Check if the library name matches any of the excluded patterns
+    set(EXCLUDE_LIBRARY FALSE)
+    foreach (pattern IN ITEMS ${EXCLUDED_LIBRARIES})
+      if (LIBRARY_NAME MATCHES ${pattern})
+        set(EXCLUDE_LIBRARY TRUE)
+        break() # Exit the inner loop
+      endif ()
+    endforeach ()
+
+    if (EXCLUDE_LIBRARY)
+      continue() # Skip the current iteration
+    endif ()
+
+    file(APPEND ${LICENSE_3RD_PARTY_FILE} "-------------------------------------------------------------------------------\n")
     file(APPEND ${LICENSE_3RD_PARTY_FILE} "${LIBRARY_NAME}\n")
-    file(APPEND ${LICENSE_3RD_PARTY_FILE} "-------------------------------------------------\n")
+    file(APPEND ${LICENSE_3RD_PARTY_FILE} "-------------------------------------------------------------------------------\n")
     file(READ ${copyright_file} COPYRIGHT_CONTENTS)
     file(APPEND ${LICENSE_3RD_PARTY_FILE} "${COPYRIGHT_CONTENTS}\n")
   endforeach ()

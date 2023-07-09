@@ -41,9 +41,6 @@ void ReadVessel() {
   // Read reference surfaces
   ocx::reader::vessel::reference_surfaces::ReadReferenceSurfaces(vesselN);
 
-  // Read Class catalogue (material, profile, hole etc.)
-  ocx::reader::class_catalogue::ReadClassCatalogue(vesselN);
-
   // Read panels
   ocx::reader::vessel::panel::ReadPanels(vesselN);
 }

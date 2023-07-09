@@ -19,7 +19,7 @@
 
 namespace ocx::reader::class_catalogue {
 
-void ReadClassCatalogue(LDOM_Element const &vesselN);
+void ReadClassCatalogue();
 
 }  // namespace ocx::reader::class_catalogue
 

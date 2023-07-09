@@ -1,5 +1,4 @@
 {
-  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/master/docs/vcpkg.schema.json",
   "name": "ocxreader",
   "version": "0.1.0",
   "license": "LGPL-2.1",

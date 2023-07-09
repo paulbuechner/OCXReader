@@ -16,6 +16,7 @@
 #include <TDocStd_Document.hxx>
 #include <boost/program_options.hpp>
 #include <filesystem>
+#include <iostream>
 #include <memory>
 
 #include "ocx/ocx-reader.h"

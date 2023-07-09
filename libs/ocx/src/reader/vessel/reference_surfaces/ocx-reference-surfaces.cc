@@ -39,8 +39,8 @@ void ReadReferenceSurfaces(LDOM_Element const &vesselN) {
     const LDOM_Node::NodeType nodeType = childN.getNodeType();
     if (nodeType == LDOM_Node::ATTRIBUTE_NODE) break;
     if (nodeType == LDOM_Node::ELEMENT_NODE) {
-      LDOM_Element surfaceN = (LDOM_Element &)childN;
-
+      LDOM_Element const &surfaceN = static_cast<LDOM_Element &>(childN);
+      
       auto meta = ocx::helper::GetOCXMeta(surfaceN);
 
       TopoDS_Shape referenceSurface =
@@ -80,7 +80,7 @@ void ReadReferenceSurfaces(LDOM_Element const &vesselN) {
   BRep_Builder compoundBuilder;
   compoundBuilder.MakeCompound(referenceSurfacesAssy);
 
-  for (TopoDS_Shape const &shape : shapes) {
+  for (auto const &shape : shapes) {
     compoundBuilder.Add(referenceSurfacesAssy, shape);
   }
 

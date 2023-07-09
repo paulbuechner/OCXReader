@@ -22,9 +22,9 @@
 
 namespace ocx::reader::class_catalogue {
 
-void ReadClassCatalogue(LDOM_Element const &vesselN) {
-  LDOM_Element catalogueN =
-      ocx::helper::GetFirstChild(vesselN, "ClassCatalogue");
+void ReadClassCatalogue() {
+  LDOM_Element catalogueN = ocx::helper::GetFirstChild(
+      OCXContext::GetInstance()->OCXRoot(), "ClassCatalogue");
   if (catalogueN.isNull()) {
     OCX_ERROR("No ClassCatalogue child node found.")
     return;
@@ -36,8 +36,7 @@ void ReadClassCatalogue(LDOM_Element const &vesselN) {
   ocx::reader::class_catalogue::x_section_catalogue::ReadXSectionCatalogue(
       catalogueN);
 
-  // TODO: Read HoleShapeCatalogue
-
+  // Read HoleShapeCatalogue
   ocx::hole_catalogue::ReadHoleCatalogue(catalogueN);
 }
 

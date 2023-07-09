@@ -26,6 +26,7 @@
 #include <TopExp_Explorer.hxx>
 #include <TopoDS.hxx>
 #include <gp_Pln.hxx>
+#include <magic_enum.hpp>
 
 #include "ocx/internal/ocx-utils.h"
 #include "ocx/ocx-helper.h"
@@ -349,7 +350,7 @@ TopoDS_Face ReadNURBSSurface(LDOM_Element const &nurbsSrfN) {
     OCX_ERROR(
         "Could not create restricted TopoDS_Face in NURBSSurface with surface "
         "id={} guid={}, exited with status {}",
-        meta->id, meta->guid, faceBuilder.Error())
+        meta->id, meta->guid, magic_enum::enum_name(faceBuilder.Error()))
     return {};
   }
 

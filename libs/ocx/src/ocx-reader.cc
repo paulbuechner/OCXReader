@@ -23,6 +23,7 @@
 #include <memory>
 #include <string>
 
+#include "ocx/internal/ocx-class-catalogue.h"
 #include "ocx/internal/ocx-coordinate-system.h"
 #include "ocx/internal/ocx-log.h"
 #include "ocx/internal/ocx-utils.h"
@@ -135,7 +136,8 @@ Standard_Boolean OCXReader::Parse(Handle(TDocStd_Document) & doc,
   // TODO: See STEPCAFControl_Reader::Transfer
   Message_ProgressScope aPSRoot(theProgress, nullptr, 2);
 
-  // TODO: Read ClassCatalogue
+  // Read Class catalogue (material, profile, hole etc.)
+  ocx::reader::class_catalogue::ReadClassCatalogue();
   aPSRoot.Next();
 
   // Read Vessel elements TODO: Should return Standard_Boolean

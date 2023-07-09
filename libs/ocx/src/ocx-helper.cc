@@ -60,7 +60,7 @@ std::unique_ptr<OCXMeta> GetOCXMeta(LDOM_Element const &element) {
 //-----------------------------------------------------------------------------
 
 std::string GetLocalTagName(LDOM_Element const &elem, bool keepPrefix) {
-  auto tagName = std::string(elem.getTagName().GetString());
+  std::string tagName = elem.getTagName().GetString();
   if (std::size_t idx = tagName.find(':');
       idx != std::string::npos && !keepPrefix) {
     return tagName.substr(idx + 1);
@@ -71,7 +71,7 @@ std::string GetLocalTagName(LDOM_Element const &elem, bool keepPrefix) {
 //-----------------------------------------------------------------------------
 
 std::string GetLocalAttrName(LDOM_Node const &elem) {
-  auto tagName = std::string(elem.getNodeName().GetString());
+  std::string tagName = elem.getNodeName().GetString();
   if (std::size_t idx = tagName.find(':'); idx != std::string::npos) {
     return tagName.substr(idx + 1);
   }

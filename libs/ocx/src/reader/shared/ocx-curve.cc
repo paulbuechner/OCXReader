@@ -393,10 +393,8 @@ TopoDS_Edge ReadLine3D(LDOM_Element const &lineN) {
 
   gp_Pnt start = ocx::helper::ReadPoint(startN);
   gp_Pnt end = ocx::helper::ReadPoint(endN);
-
-  Handle(Geom_TrimmedCurve) arc = GC_MakeSegment(start, end);
-
-  return BRepBuilderAPI_MakeEdge(arc);
+  
+  return BRepBuilderAPI_MakeEdge(start, end);
 }
 
 TopoDS_Shape ReadPolyLine3D(LDOM_Element const &curveN) {

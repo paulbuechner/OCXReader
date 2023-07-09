@@ -24,11 +24,11 @@
 
 namespace ocxreader::file_export {
 
-int HandleExport(Handle(TDocStd_Document) const& doc,
-                 Handle(TDocStd_Application) const& app,
+int HandleExport(Handle(TDocStd_Document) const &doc,
+                 Handle(TDocStd_Application) const &app,
                  std::string_view outputFilePath,
-                 std::vector<std::string> const& exportFormats) {
-  for (auto& format : exportFormats) {
+                 std::vector<std::string> const &exportFormats) {
+  for (auto const &format : exportFormats) {
     if (format == "STEP") {
       // Write to STEP
       STEPCAFControl_Writer stepWriter;
@@ -37,14 +37,14 @@ int HandleExport(Handle(TDocStd_Document) const& doc,
           std::cerr << "Failed to transfer document to STEP model" << std::endl;
           return 66;
         }
-        const IFSelect_ReturnStatus ret =
+        IFSelect_ReturnStatus const ret =
             stepWriter.Write((std::string(outputFilePath) + ".stp").c_str());
         if (ret != IFSelect_RetDone) {
           std::cerr << "Failed to write STEP file, exited with status: " << ret
                     << std::endl;
           return 66;
         }
-      } catch (Standard_Failure const& exp) {
+      } catch (Standard_Failure const &exp) {
         std::cerr << "Failed to write STEP file, exception: "
                   << exp.GetMessageString() << std::endl;
         return 66;

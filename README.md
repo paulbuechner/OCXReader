@@ -59,7 +59,7 @@ implemented. Stiffener traces are shown, but no stiffener representation.
 
 ### Prerequisites
 
-To build OCXReader you need to have the prerequisites set up:
+To build OCXReader you need to have the following prerequisites set up:
 
 #### Compiler
 
@@ -96,7 +96,7 @@ When checking out the project for the first time, make sure to also initialize
 and update the submodules:
 
 ```shell
-$ git submodule update --init --recursive
+git submodule update --init --recursive
 ```
 
 #### Python
@@ -107,7 +107,7 @@ this is only needed when building on Linux.
 To ensure your python3 points to the correct version run:
 
 ```shell
-$ ls -l /usr/bin/python3
+ls -l /usr/bin/python3
 lrwxrwxrwx 1 root root 9  7. Jan 15:51 /usr/bin/python3 -> python3.7 # required python version >= 3.7
 ```
 
@@ -180,17 +180,17 @@ A typical setup using the cli looks like this:
 
 ```shell
 # Generate the build files (use cli.bat on Windows)
-$ ./cli.sh gensln --vcpkg /path/to/vcpkg
+./cli.sh gensln --vcpkg /path/to/vcpkg
 
 # Build the project (use cli.bat on Windows)
-$ ./cli.sh buildsln --build-type Release --build-dir ./build
+./cli.sh buildsln --build-type Release --build-dir ./build
 ```
 
 The cli also provides functionality to combine the mentioned steps into one:
 
 ```shell
 # Generate the build files and build the project (use cli.bat on Windows)
-$ ./cli.sh gensln --vcpkg /path/to/vcpkg buildsln
+./cli.sh gensln --vcpkg /path/to/vcpkg buildsln
 #                                                ^ no need to specify --build-type and --build-dir as they get inherited from the previous gensln command
 ```
 
@@ -200,7 +200,7 @@ command. For example, to specify a custom triplet, use the following command:
 
 ```shell
 # Generate the build files
-$ ./cli.sh gensln --vcpkg /path/to/vcpkg --cmake-options -DVCPKG_TARGET_TRIPLET=x64-linux-dynamic
+./cli.sh gensln --vcpkg /path/to/vcpkg --cmake-options -DVCPKG_TARGET_TRIPLET=x64-linux-dynamic
 ```
 
 #### macOS
@@ -211,7 +211,7 @@ to the `DVCPKG_INSTALL_OPTIONS` in the CMake options.
 
 ```shell
 # Generate the build files
-$ ./cli.sh gensln --vcpkg /path/to/vcpkg --cmake-options -DVCPKG_INSTALL_OPTIONS=--allow-unsupported
+./cli.sh gensln --vcpkg /path/to/vcpkg --cmake-options -DVCPKG_INSTALL_OPTIONS=--allow-unsupported
 ```
 
 #### Using an IDE
@@ -264,14 +264,14 @@ the project, use the `installsln` command:
 
 ```shell
 # Install the project (use cli.bat on Windows)
-$ ./cli.sh installsln --build-type Release --build-dir ./build
+./cli.sh installsln --build-type Release --build-dir ./build
 ```
 
 Or use the `installsln` command along with the `gensln` and `buildsln` commands:
 
 ```shell
 # Generate the build files, build and install the project (use cli.bat on Windows)
-$ ./cli.sh gensln --vcpkg /path/to/vcpkg buildsln installsln
+./cli.sh gensln --vcpkg /path/to/vcpkg buildsln installsln
 #                                                           ^ no need to specify --build-type and --build-dir as they get inherited from the previous gensln or buildsln command
 ```
 
@@ -284,7 +284,7 @@ $ ./cli.sh gensln --vcpkg /path/to/vcpkg buildsln installsln
 OCXReader is a command line tool with the following options:
 
 ```shell
-$ ocxreader --help
+ocxreader --help
 Allowed options:
 
 Generic options:
@@ -323,8 +323,8 @@ found [here](ocxreader/config/config.example.json).
 <table>
   <tbody>
     <tr>
-      <td align="center"><a href="https://github.com/skfcz"><img src="https://avatars.githubusercontent.com/u/1381962?v=4?s=64" width="64px;" alt="Carsten Zerbst"/><br /><sub><b>Carsten Zerbst</b></sub></a><br /><a href="https://github.com/skfcz/OCXReader/commits?author=skfcz" title="Code">💻</a> <a href="#maintenance-skfcz" title="Maintenance">🚧</a> <a href="https://github.com/skfcz/OCXReader/commits?author=skfcz" title="Documentation">📖</a> <a href="#ideas-skfcz" title="Ideas, Planning, & Feedback">🤔</a></td>
-      <td align="center"><a href="https://github.com/paulbuechner"><img src="https://avatars.githubusercontent.com/u/45827409?s=400&u=a62152a15513e36652b045b5879f39f124120254&v=4?s=64" width="64px;" alt="Paul Büchner"/><br /><sub><b>Paul Büchner</b></sub></a><br /><a href="https://github.com/skfcz/OCXReader/commits?author=paulbuechner" title="Code">💻</a> <a href="#maintenance-paulbuechner" title="Maintenance">🚧</a> <a href="https://github.com/skfcz/OCXReader/commits?author=paulbuechner" title="Documentation">📖</a> <a href="#ideas-paulbuechner" title="Ideas, Planning, & Feedback">🤔</a></td>
+      <td align="center"><a href="https://github.com/skfcz"><img src="https://avatars.githubusercontent.com/u/1381962?v=4" width="64px;" alt="Carsten Zerbst"/><br /><sub><b>Carsten Zerbst</b></sub></a><br /><a href="https://github.com/skfcz/OCXReader/commits?author=skfcz" title="Code">💻</a> <a href="#maintenance-skfcz" title="Maintenance">🚧</a> <a href="https://github.com/skfcz/OCXReader/commits?author=skfcz" title="Documentation">📖</a> <a href="#ideas-skfcz" title="Ideas, Planning, & Feedback">🤔</a></td>
+      <td align="center"><a href="https://github.com/paulbuechner"><img src="https://avatars.githubusercontent.com/u/45827409?v=4" width="64px;" alt="Paul Büchner"/><br /><sub><b>Paul Büchner</b></sub></a><br /><a href="https://github.com/skfcz/OCXReader/commits?author=paulbuechner" title="Code">💻</a> <a href="#maintenance-paulbuechner" title="Maintenance">🚧</a> <a href="https://github.com/skfcz/OCXReader/commits?author=paulbuechner" title="Documentation">📖</a> <a href="#ideas-paulbuechner" title="Ideas, Planning, & Feedback">🤔</a></td>
       <td align="center"><a href="https://github.com/OzanOzanOzan"><img src="https://avatars.githubusercontent.com/u/42107969?v=4" width="64px;" alt="Paul Büchner"/><br /><sub><b>Ozan</b></sub></a><br /><a href="https://github.com/skfcz/OCXReader/commits?author=OzanOzanOzan" title="Code">💻</a> <a href="#ideas-paulbuechner" title="Ideas, Planning, & Feedback">🤔</a></td>
     </tr>
   </tbody>

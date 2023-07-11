@@ -18,7 +18,6 @@
 #include <BRepBuilderAPI_MakeWire.hxx>
 #include <GC_MakeArcOfCircle.hxx>
 #include <GC_MakeCircle.hxx>
-#include <GC_MakeSegment.hxx>
 #include <Geom_BSplineCurve.hxx>
 #include <Geom_Circle.hxx>
 #include <Geom_Ellipse.hxx>
@@ -26,6 +25,7 @@
 #include <TColgp_Array1OfPnt.hxx>
 #include <TopoDS.hxx>
 #include <TopoDS_Edge.hxx>
+#include <magic_enum.hpp>
 
 #include "ocx/internal/ocx-utils.h"
 #include "ocx/ocx-helper.h"
@@ -90,7 +90,8 @@ TopoDS_Wire ReadCurve(LDOM_Element const &curveRootN) {
         default:
           OCX_WARN(
               "Received unsupported shape type {} in curve {} id={} guid={}",
-              edge.ShapeType(), meta->name, meta->id, meta->guid)
+              magic_enum::enum_name(edge.ShapeType()), meta->name, meta->id,
+              meta->guid)
           break;
       }
     }
@@ -161,7 +162,7 @@ TopoDS_Shape ReadCompositeCurve3D(LDOM_Element const &curveColN) {
           OCX_ERROR(
               "Received unsupported shape type {} in CompositeCurve3D with "
               "curve id={} guid={}",
-              edge.ShapeType(), meta->id, meta->guid)
+              magic_enum::enum_name(edge.ShapeType()), meta->id, meta->guid)
           break;
       }
     }
@@ -393,7 +394,7 @@ TopoDS_Edge ReadLine3D(LDOM_Element const &lineN) {
 
   gp_Pnt start = ocx::helper::ReadPoint(startN);
   gp_Pnt end = ocx::helper::ReadPoint(endN);
-  
+
   return BRepBuilderAPI_MakeEdge(start, end);
 }
 

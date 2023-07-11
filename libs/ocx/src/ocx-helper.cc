@@ -31,6 +31,7 @@
 #include <TColgp_Array2OfPnt.hxx>
 #include <TopExp_Explorer.hxx>
 #include <TopoDS.hxx>
+#include <magic_enum.hpp>
 #include <memory>
 #include <string>
 #include <vector>
@@ -327,8 +328,8 @@ PolesWeightsCurve ParseControlPointsCurve(LDOM_Element const &controlPtListN,
     if (nodeType != LDOM_Node::ELEMENT_NODE) {
       OCX_ERROR(
           "Invalid node type found in ControlPointList element. Got {}, but"
-          "expected {}",
-          nodeType, LDOM_Node::ELEMENT_NODE)
+          "expected ELEMENT_NODE",
+          magic_enum::enum_name(nodeType))
       polesWeights.IsNull = true;
       return polesWeights;
     }
@@ -383,8 +384,8 @@ PolesWeightsSurface ParseControlPointsSurface(
       if (nodeType != LDOM_Node::ELEMENT_NODE) {
         OCX_ERROR(
             "Invalid node type found in ControlPointList element. Got {}, but"
-            "expected {}",
-            nodeType, LDOM_Node::ELEMENT_NODE)
+            "expected ELEMENT_NODE",
+            magic_enum::enum_name(nodeType))
         polesWeights.IsNull = true;
         return polesWeights;
       }

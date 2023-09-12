@@ -18,8 +18,8 @@
             <ocx:OuterContour>
                 <ocx:Ellipse3D id="02" ocx:GUIDRef="6a781615-406c-4f25-a439-25dc4a12f1bd">
                     <ocx:Center>
-                        <ocx:X numericvalue="0" unit="u2"/>
-                        <ocx:Y numericvalue="0" unit="u2"/>
+                        <ocx:X numericvalue="5" unit="u2"/>
+                        <ocx:Y numericvalue="15" unit="u2"/>
                         <ocx:Z numericvalue="0" unit="u2"/>
                     </ocx:Center>
                     <ocx:MajorDiameter numericvalue="10.0" unit="u2"/>
@@ -37,8 +37,8 @@
                     <ocx:OuterContour>
                         <ocx:Ellipse3D id="04" ocx:GUIDRef="6a721615-406c-4f25-a439-25dc4a12f1bd">
                             <ocx:Center>
-                                <ocx:X numericvalue="0" unit="u2"/>
-                                <ocx:Y numericvalue="0" unit="u2"/>
+                                <ocx:X numericvalue="5" unit="u2"/>
+                                <ocx:Y numericvalue="15" unit="u2"/>
                                 <ocx:Z numericvalue="0" unit="u2"/>
                             </ocx:Center>
                             <ocx:MajorDiameter numericvalue="10.0" unit="u2"/>
@@ -58,21 +58,21 @@
             <ocx:OuterContour>
                 <ocx:CircumCircle3D id="002" ocx:GUIDRef="6a721615-406c-4f25-a539-25dc4a12f1bd">
                     <ocx:Positions>
-                        <ocx:Point>
-                            <ocx:X numericvalue="10.0" unit="u2"/>
+                        <ocx:Point3D>
+                            <ocx:X numericvalue="20.0" unit="u2"/>
                             <ocx:Y numericvalue="10.0" unit="u2"/>
                             <ocx:Z numericvalue="0.0" unit="u2"/>
-                        </ocx:Point>
-                        <ocx:Point>
-                            <ocx:X numericvalue="15.0" unit="u2"/>
-                            <ocx:Y numericvalue="10.0" unit="u2"/>
-                            <ocx:Z numericvalue="0.0" unit="u2"/>
-                        </ocx:Point>
-                        <ocx:Point>
-                            <ocx:X numericvalue="12.5" unit="u2"/>
+                        </ocx:Point3D>
+                        <ocx:Point3D>
+                            <ocx:X numericvalue="25.0" unit="u2"/>
                             <ocx:Y numericvalue="15.0" unit="u2"/>
                             <ocx:Z numericvalue="0.0" unit="u2"/>
-                        </ocx:Point>
+                        </ocx:Point3D>
+                        <ocx:Point3D>
+                            <ocx:X numericvalue="20.0" unit="u2"/>
+                            <ocx:Y numericvalue="20.0" unit="u2"/>
+                            <ocx:Z numericvalue="0.0" unit="u2"/>
+                        </ocx:Point3D>
                     </ocx:Positions>
                 </ocx:CircumCircle3D>
             </ocx:OuterContour>
@@ -84,21 +84,21 @@
                     <ocx:OuterContour>
                         <ocx:CircumCircle3D id="004" ocx:GUIDRef="6a721615-406c-4f25-a539-25dc4562f1bd">
                             <ocx:Positions>
-                                <ocx:Point>
-                                    <ocx:X numericvalue="10.0" unit="u2"/>
+                                <ocx:Point3D>
+                                    <ocx:X numericvalue="20.0" unit="u2"/>
                                     <ocx:Y numericvalue="10.0" unit="u2"/>
                                     <ocx:Z numericvalue="0.0" unit="u2"/>
-                                </ocx:Point>
-                                <ocx:Point>
-                                    <ocx:X numericvalue="15.0" unit="u2"/>
-                                    <ocx:Y numericvalue="10.0" unit="u2"/>
-                                    <ocx:Z numericvalue="0.0" unit="u2"/>
-                                </ocx:Point>
-                                <ocx:Point>
-                                    <ocx:X numericvalue="12.5" unit="u2"/>
+                                </ocx:Point3D>
+                                <ocx:Point3D>
+                                    <ocx:X numericvalue="25.0" unit="u2"/>
                                     <ocx:Y numericvalue="15.0" unit="u2"/>
                                     <ocx:Z numericvalue="0.0" unit="u2"/>
-                                </ocx:Point>
+                                </ocx:Point3D>
+                                <ocx:Point3D>
+                                    <ocx:X numericvalue="20.0" unit="u2"/>
+                                    <ocx:Y numericvalue="20.0" unit="u2"/>
+                                    <ocx:Z numericvalue="0.0" unit="u2"/>
+                                </ocx:Point3D>
                             </ocx:Positions>
                         </ocx:CircumCircle3D>
                     </ocx:OuterContour>
@@ -113,7 +113,7 @@
                 <ocx:Circle3D id="0002" ocx:GUIDRef="6a721615-406c-4f25-a539-25dc4a1000bd">
                     <ocx:Diameter numericvalue="5.0" unit="u2"/>
                     <ocx:Center>
-                        <ocx:X numericvalue="20.0" unit="u2"/>
+                        <ocx:X numericvalue="35.0" unit="u2"/>
                         <ocx:Y numericvalue="15.0" unit="u2"/>
                         <ocx:Z numericvalue="0.0" unit="u2"/>
                     </ocx:Center>
@@ -129,7 +129,7 @@
                         <ocx:Circle3D id="0004" ocx:GUIDRef="6a721615-406c-4f25-a539-25dc4a1010bd">
                             <ocx:Diameter numericvalue="5.0" unit="u2"/>
                             <ocx:Center>
-                                <ocx:X numericvalue="20.0" unit="u2"/>
+                                <ocx:X numericvalue="35.0" unit="u2"/>
                                 <ocx:Y numericvalue="15.0" unit="u2"/>
                                 <ocx:Z numericvalue="0.0" unit="u2"/>
                             </ocx:Center>

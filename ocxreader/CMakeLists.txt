@@ -31,6 +31,7 @@ add_compile_definitions(
 list(APPEND ocxreader_libs
      ocxreader::ocx
      ocxreader::shipxml
+     occutils::occutils
      spdlog::spdlog
      Boost::boost
      Boost::program_options

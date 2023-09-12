@@ -471,17 +471,17 @@ TopoDS_Face ReadPlane3D(LDOM_Element const &surfaceN) {
       boxLines.emplace_back(p3S, zDir);
       boxLines.emplace_back(p2S, zDir);
 
-      GeomAdaptor_Surface surf = OCCUtils::Surface::FromFace(planeFace);
+      GeomAdaptor_Surface surf = occutils::surface::FromFace(planeFace);
 
       for (const auto &boxLine : boxLines) {
         if (std::optional pnt =
-                OCCUtils::Surface::Intersection(boxLine, surf)) {
+                occutils::surface::Intersection(boxLine, surf)) {
           pnts.push_back(pnt.value());
         }
       }
     }
 
-    outerContour = OCCUtils::Wire::FromPoints(pnts, true);
+    outerContour = occutils::wire::FromPoints(pnts, true);
     if (!outerContour.Closed()) {
       OCX_ERROR(
           "Outer contour in ReadPlane3D is not closed. Skip building the "

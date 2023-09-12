@@ -1,12 +1,22 @@
 {
   "name": "occutils",
-  "version-string": "0.1.0",
-  "description": "OpenCASCADE utility library - algorithms and convenience functions",
-  "homepage": "https://github.com/paulbuechner/OCCUtils",
+  "version": "0.0.0",
+  "license": "Apache-2.0",
+  "description": [
+    "A utility library providing high-level functions and algorithms to ",
+    "empower OpenCASCADE-based engineering tasks."
+  ],
+  "homepage": "https://github.com/paulbuechner/occutils",
   "dependencies": [
     "opencascade",
-    "boost-algorithm",
-    "boost-filesystem",
-    "boost-system"
-  ]
+    "gtest"
+  ],
+  "features": {
+    "tests": {
+      "description": "Build tests",
+      "dependencies": [
+        "gtest"
+      ]
+    }
+  }
 }

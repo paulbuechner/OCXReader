@@ -416,14 +416,14 @@ PolesWeightsSurface ParseControlPointsSurface(
 
 //-----------------------------------------------------------------------------
 
-// TODO: Prototype, if solution is proven to work goes to -> OCCUtils::Surface
+// TODO: Prototype, if solution is proven to work goes to -> occutils::surface
 // TODO: Should support SewedShape shape type (face, a shell, a solid or a
 // TODO: compound.)
 TopoDS_Shape LimitShapeByWire(TopoDS_Shape const &shape,
                               TopoDS_Wire const &wire, std::string_view id,
                               std::string_view guid) {
   // Check if given TopoDS_Shape is one of TopoDS_Face or TopoDS_Shell
-  if (!OCCUtils::Shape::IsFace(shape) && !OCCUtils::Shape::IsShell(shape)) {
+  if (!occutils::shape::IsFace(shape) && !occutils::shape::IsShell(shape)) {
     OCX_ERROR(
         "Given TopoDS_Shape is neither a TopoDS_Face or a TopoDS_Shell in "
         "Shape id={} guid={}",
@@ -432,10 +432,10 @@ TopoDS_Shape LimitShapeByWire(TopoDS_Shape const &shape,
   }
 
   // Handle TopoDS_Shape is a TopoDS_Face
-  if (OCCUtils::Shape::IsFace(shape)) {
+  if (occutils::shape::IsFace(shape)) {
     try {
       GeomAdaptor_Surface surfaceAdapter =
-          OCCUtils::Surface::FromFace(TopoDS::Face(shape));
+          occutils::surface::FromFace(TopoDS::Face(shape));
       auto faceBuilder = BRepBuilderAPI_MakeFace(surfaceAdapter.Surface(), wire,
                                                  Standard_True);
       faceBuilder.Build();
@@ -467,12 +467,12 @@ TopoDS_Shape LimitShapeByWire(TopoDS_Shape const &shape,
 
     // Else handle TopoDS_Shell
     std::vector<TopoDS_Face> faces =
-        OCCUtils::ShapeComponents::AllFacesWithin(shape);
+        occutils::shape_components::AllFacesWithin(shape);
 
     BRepBuilderAPI_Sewing shellMaker;
     for (TopoDS_Face const &face : faces) {
       GeomAdaptor_Surface surfaceAdapter =
-          OCCUtils::Surface::FromFace(TopoDS::Face(face));
+          occutils::surface::FromFace(TopoDS::Face(face));
       auto faceBuilder = BRepBuilderAPI_MakeFace(surfaceAdapter.Surface(), wire,
                                                  Standard_True);
       faceBuilder.Build();
@@ -524,7 +524,7 @@ TopoDS_Shape LimitShapeByWire(TopoDS_Shape const &shape,
 
 //-----------------------------------------------------------------------------
 
-// TODO: Prototype, if solution is proven to work goes to -> OCCUtils::Surface
+// TODO: Prototype, if solution is proven to work goes to -> occutils::surface
 std::optional<TopoDS_Edge> Intersection(const GeomAdaptor_Surface &S1,
                                         const GeomAdaptor_Surface &S2) {
   auto intersector =
@@ -541,7 +541,7 @@ std::optional<TopoDS_Edge> Intersection(const GeomAdaptor_Surface &S1,
 
 //-----------------------------------------------------------------------------
 
-// TODO: Prototype, if solution is proven to work goes to -> OCCUtils::Curve
+// TODO: Prototype, if solution is proven to work goes to -> occutils::curve
 std::optional<TopoDS_Edge> CurveLimitByBoundingBox(
     const GeomAdaptor_Curve &curve, const Bnd_Box &box) {
   if (box.IsOut(curve.Line())) {
@@ -552,22 +552,22 @@ std::optional<TopoDS_Edge> CurveLimitByBoundingBox(
 
   // Get bounding box planes as faces
   std::vector<TopoDS_Face> faces{};
-  faces.emplace_back(OCCUtils::Face::FromPoints(
+  faces.emplace_back(occutils::face::FromPoints(
       {gp_Pnt(min.X(), min.Y(), min.Z()), gp_Pnt(max.X(), min.Y(), min.Z()),
        gp_Pnt(max.X(), max.Y(), min.Z())}));  // XYBottom
-  faces.emplace_back(OCCUtils::Face::FromPoints(
+  faces.emplace_back(occutils::face::FromPoints(
       {gp_Pnt(min.X(), min.Y(), max.Z()), gp_Pnt(max.X(), min.Y(), max.Z()),
        gp_Pnt(max.X(), max.Y(), max.Z())}));  // XYTop
-  faces.emplace_back(OCCUtils::Face::FromPoints(
+  faces.emplace_back(occutils::face::FromPoints(
       {gp_Pnt(min.X(), min.Y(), min.Z()), gp_Pnt(min.X(), max.Y(), min.Z()),
        gp_Pnt(min.X(), max.Y(), max.Z())}));  // XZLeft
-  faces.emplace_back(OCCUtils::Face::FromPoints(
+  faces.emplace_back(occutils::face::FromPoints(
       {gp_Pnt(max.X(), min.Y(), min.Z()), gp_Pnt(max.X(), max.Y(), min.Z()),
        gp_Pnt(max.X(), max.Y(), max.Z())}));  // XZRight
-  faces.emplace_back(OCCUtils::Face::FromPoints(
+  faces.emplace_back(occutils::face::FromPoints(
       {gp_Pnt(min.X(), min.Y(), min.Z()), gp_Pnt(min.X(), min.Y(), max.Z()),
        gp_Pnt(max.X(), min.Y(), max.Z())}));  // YZFront
-  faces.emplace_back(OCCUtils::Face::FromPoints(
+  faces.emplace_back(occutils::face::FromPoints(
       {gp_Pnt(min.X(), max.Y(), min.Z()), gp_Pnt(min.X(), max.Y(), max.Z()),
        gp_Pnt(max.X(), max.Y(), max.Z())}));  // YZBack
 
@@ -575,9 +575,9 @@ std::optional<TopoDS_Edge> CurveLimitByBoundingBox(
   std::vector<gp_Pnt> intersectionPoints{};
   for (const auto &face : faces) {
     GeomAdaptor_Surface surfaceAdapter =
-        OCCUtils::Surface::FromFace(TopoDS::Face(face));
+        occutils::surface::FromFace(TopoDS::Face(face));
 
-    if (std::optional pnt = OCCUtils::Surface::Intersection(
+    if (std::optional pnt = occutils::surface::Intersection(
             curve.Line(), surfaceAdapter.Surface())) {
       intersectionPoints.push_back(pnt.value());
     }

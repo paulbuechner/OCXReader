@@ -243,9 +243,9 @@ void PanelReader::ReadSupportAndOuterContour(const LDOM_Element &panelN,
         ocx::OCXContext::GetInstance()->LookupShape(panelN);
     if (!panelShape.IsNull()) {
       if (std::vector<TopoDS_Face> faces =
-              OCCUtils::ShapeComponents::AllFacesWithin(panelShape);
+              occutils::shape_components::AllFacesWithin(panelShape);
           faces.size() == 1) {
-        GeomAdaptor_Surface adaptor = OCCUtils::Surface::FromFace(faces.at(0));
+        GeomAdaptor_Surface adaptor = occutils::surface::FromFace(faces.at(0));
         if (adaptor.GetType() == GeomAbs_Plane) {
           panel.SetIsPlanar(true);
           support.SetIsPlanar(true);

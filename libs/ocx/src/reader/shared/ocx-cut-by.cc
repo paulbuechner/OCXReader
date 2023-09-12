@@ -98,7 +98,7 @@ TopoDS_Shape ReadCutBy(LDOM_Element const &panelN, TopoDS_Shape &panelShape) {
           }
 
           try {
-            panelShape = OCCUtils::Boolean::Cut(panelShape, cutShape);
+            panelShape = occutils::boolean::Cut(panelShape, cutShape);
           } catch (StdFail_NotDone &e) {
             OCX_ERROR(
                 "Failed to cut panel surface with cut geometry in "

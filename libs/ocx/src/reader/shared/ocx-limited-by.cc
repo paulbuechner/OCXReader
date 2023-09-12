@@ -109,15 +109,15 @@ TopoDS_Shape ReadOcxItemPtr(LDOM_Element const &panelN,
   }
 
   // TODO: Only faces are supported for now
-  if (!OCCUtils::Shape::IsFace(panelShape) ||
-      !OCCUtils::Shape::IsFace(ocxItemPtrShape)) {
+  if (!occutils::shape::IsFace(panelShape) ||
+      !occutils::shape::IsFace(ocxItemPtrShape)) {
     OCX_ERROR("Only faces are supported for now")
     return {};
   }
 
   // Get intersection between Panel and referenced OcxItemPtr shape
   GeomAdaptor_Surface panelShapeAdapter =
-      OCCUtils::Surface::FromFace(TopoDS::Face(panelShape));
+      occutils::surface::FromFace(TopoDS::Face(panelShape));
   if (panelShapeAdapter.Surface().IsNull()) {
     OCX_ERROR("Failed to get surface from Panel with id={} guid={}",
               panelMeta->id, panelMeta->guid)
@@ -125,7 +125,7 @@ TopoDS_Shape ReadOcxItemPtr(LDOM_Element const &panelN,
   }
 
   GeomAdaptor_Surface ocxItemPtrShapeAdapter =
-      OCCUtils::Surface::FromFace(TopoDS::Face(ocxItemPtrShape));
+      occutils::surface::FromFace(TopoDS::Face(ocxItemPtrShape));
   if (ocxItemPtrShapeAdapter.Surface().IsNull()) {
     OCX_ERROR("Failed to get surface from OcxItemPtr with guid={}",
               ocxItemPtrMeta->guid)
@@ -167,7 +167,7 @@ TopoDS_Shape ReadOcxItemPtr(LDOM_Element const &panelN,
 
   // Limit the intersection edge to the bounding box
   GeomAdaptor_Curve limitedByShapeAdapter =
-      OCCUtils::Curve::FromEdge(*limitedByShape);
+      occutils::curve::FromEdge(*limitedByShape);
 
   std::optional<TopoDS_Edge> limitedCurve =
       ocx::helper::CurveLimitByBoundingBox(limitedByShapeAdapter, boundingBox);
@@ -238,8 +238,8 @@ TopoDS_Shape ReadGridRef(LDOM_Element const &panelN,
   }
 
   // TODO: Only faces are supported for now
-  if (!OCCUtils::Shape::IsFace(panelShape) ||
-      !OCCUtils::Shape::IsFace(gridRefShape)) {
+  if (!occutils::shape::IsFace(panelShape) ||
+      !occutils::shape::IsFace(gridRefShape)) {
     OCX_ERROR("Only faces are supported for now")
     return {};
   }
@@ -268,7 +268,7 @@ TopoDS_Shape ReadGridRef(LDOM_Element const &panelN,
 
   // Get intersection between Panel and referenced OcxItemPtr shape
   GeomAdaptor_Surface panelShapeAdapter =
-      OCCUtils::Surface::FromFace(TopoDS::Face(panelShape));
+      occutils::surface::FromFace(TopoDS::Face(panelShape));
   if (panelShapeAdapter.Surface().IsNull()) {
     OCX_ERROR("Failed to get surface from Panel with id={} guid={}",
               panelMeta->id, panelMeta->guid)
@@ -276,7 +276,7 @@ TopoDS_Shape ReadGridRef(LDOM_Element const &panelN,
   }
 
   GeomAdaptor_Surface gridRefShapeAdapter =
-      OCCUtils::Surface::FromFace(TopoDS::Face(gridRefOffsetShape));
+      occutils::surface::FromFace(TopoDS::Face(gridRefOffsetShape));
   if (gridRefShapeAdapter.Surface().IsNull()) {
     OCX_ERROR("Failed to get surface from GridRef with guid={}",
               gridRefMeta->guid)
@@ -318,7 +318,7 @@ TopoDS_Shape ReadGridRef(LDOM_Element const &panelN,
 
   // Limit the intersection edge to the bounding box
   GeomAdaptor_Curve limitedByShapeAdapter =
-      OCCUtils::Curve::FromEdge(*limitedByShape);
+      occutils::curve::FromEdge(*limitedByShape);
 
   std::optional<TopoDS_Edge> limitedCurve =
       ocx::helper::CurveLimitByBoundingBox(limitedByShapeAdapter, boundingBox);

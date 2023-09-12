@@ -200,7 +200,7 @@ TopoDS_Shape ReadRefPlane(LDOM_Element const &refPlanesN,
 
       auto unlimitedSurface = gp_Pln(org, direction);
       TopoDS_Wire outerContour =
-          OCCUtils::Wire::FromPoints({pnt0, pnt1, pnt2, pnt3}, true);
+          occutils::wire::FromPoints({pnt0, pnt1, pnt2, pnt3}, true);
       if (!outerContour.Closed()) {
         OCX_ERROR(
             "Outer contour in ReadRefPlane is not closed. Skip building the "

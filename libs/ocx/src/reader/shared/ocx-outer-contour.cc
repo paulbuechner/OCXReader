@@ -40,7 +40,7 @@ TopoDS_Wire ReadOuterContour(LDOM_Element const& elementN) {
               meta->guid)
     return {};
   }
-  if (!OCCUtils::Shape::IsWire(curveShape)) {
+  if (!occutils::shape::IsWire(curveShape)) {
     OCX_ERROR(
         "OuterContour child node in element id={} guid={} is not of type "
         "TopoDS_Wire, expected a closed edge as OuterContour, but got {}",

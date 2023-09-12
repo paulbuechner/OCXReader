@@ -1,0 +1,224 @@
+﻿<ocx:ocxXML xmlns:ocx="http://data.dnvgl.com/Schemas/ocxXMLSchema" schemaVersion="2.8.6" xsi:schemaLocation="http://data.dnvgl.com/Schemas/ocxXMLSchema OCX_Schema.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<ocx:Header name="OCX_Plate_Contour_Test" author="Paul Büchner" organization="PROSTEP" time_stamp="2023-07-09T15:13:25.5649291+02:00" />
+	<ocx:Vessel id="vessel" name="OCX_Plate_Contour_Test" ocx:GUIDRef="21e4ca75-f2cf-4b34-90d2-889c89fa53f3">
+        <ocx:ReferenceSurfaces>
+            <ocx:Plane3D ocx:GUIDRef="{EDB9D10A-0440-4481-A4D8-5623522A13AE}">
+                <ocx:Origin>
+                    <ocx:X numericvalue="0" unit="u2" />
+                    <ocx:Y numericvalue="0" unit="u2" />
+                    <ocx:Z numericvalue="0" unit="u2" />
+                </ocx:Origin>
+                <ocx:Normal x="0" y="0" z="1" />
+            </ocx:Plane3D>
+        </ocx:ReferenceSurfaces>
+        <ocx:Panel id="01" name="Panel_Ellipse3D" ocx:GUIDRef="6a781615-406c-4f25-a439-2f5c4a12f1bd">
+            <ocx:UnboundedGeometry>
+                <ocx:SurfaceRef ocx:GUIDRef="{EDB9D10A-0440-4481-A4D8-5623522A13AE}" ocx:refType="ocx:Surface" />
+            </ocx:UnboundedGeometry>
+            <ocx:OuterContour>
+                <ocx:Ellipse3D id="02" ocx:GUIDRef="6a781615-406c-4f25-a439-25dc4a12f1bd">
+                    <ocx:Center>
+                        <ocx:X numericvalue="0" unit="u2"/>
+                        <ocx:Y numericvalue="0" unit="u2"/>
+                        <ocx:Z numericvalue="0" unit="u2"/>
+                    </ocx:Center>
+                    <ocx:MajorDiameter numericvalue="10.0" unit="u2"/>
+                    <ocx:MinorDiameter numericvalue="5.0" unit="u2"/>
+                    <ocx:MajorAxis x="1" y="0" z="0"/>
+                    <ocx:MinorAxis x="0" y="1" z="0"/>
+                    <ocx:Normal x="0" y="0" z="1"/>
+                </ocx:Ellipse3D>
+            </ocx:OuterContour>
+            <ocx:ComposedOf>
+                <ocx:Plate id="03" name="Plate_Ellipse3D" ocx:GUIDRef="4f9fc7c3-106e-4acd-ba3d-e9fee7a4bcc4">
+                    <ocx:PlateMaterial localRef="nplcid4" ocx:GUIDRef="ae011c45-b6c5-4676-a2ba-a070a774c978" ocx:refType="ocx:Material">
+                        <ocx:Thickness numericvalue="0.015" unit="u2" />
+                    </ocx:PlateMaterial>
+                    <ocx:OuterContour>
+                        <ocx:Ellipse3D id="04" ocx:GUIDRef="6a721615-406c-4f25-a439-25dc4a12f1bd">
+                            <ocx:Center>
+                                <ocx:X numericvalue="0" unit="u2"/>
+                                <ocx:Y numericvalue="0" unit="u2"/>
+                                <ocx:Z numericvalue="0" unit="u2"/>
+                            </ocx:Center>
+                            <ocx:MajorDiameter numericvalue="10.0" unit="u2"/>
+                            <ocx:MinorDiameter numericvalue="5.0" unit="u2"/>
+                            <ocx:MajorAxis x="1" y="0" z="0"/>
+                            <ocx:MinorAxis x="0" y="1" z="0"/>
+                            <ocx:Normal x="0" y="0" z="1"/>
+                        </ocx:Ellipse3D>
+                    </ocx:OuterContour>
+                </ocx:Plate>
+            </ocx:ComposedOf>
+        </ocx:Panel>
+        <ocx:Panel id="001" name="Panel_CircumCircle3D" ocx:GUIDRef="6a781615-506c-4f25-a439-2f5c4a12f1bd">
+            <ocx:UnboundedGeometry>
+                <ocx:SurfaceRef ocx:GUIDRef="{EDB9D10A-0440-4481-A4D8-5623522A13AE}" ocx:refType="ocx:Surface" />
+            </ocx:UnboundedGeometry>
+            <ocx:OuterContour>
+                <ocx:CircumCircle3D id="002" ocx:GUIDRef="6a721615-406c-4f25-a539-25dc4a12f1bd">
+                    <ocx:Positions>
+                        <ocx:Point>
+                            <ocx:X numericvalue="10.0" unit="u2"/>
+                            <ocx:Y numericvalue="10.0" unit="u2"/>
+                            <ocx:Z numericvalue="0.0" unit="u2"/>
+                        </ocx:Point>
+                        <ocx:Point>
+                            <ocx:X numericvalue="15.0" unit="u2"/>
+                            <ocx:Y numericvalue="10.0" unit="u2"/>
+                            <ocx:Z numericvalue="0.0" unit="u2"/>
+                        </ocx:Point>
+                        <ocx:Point>
+                            <ocx:X numericvalue="12.5" unit="u2"/>
+                            <ocx:Y numericvalue="15.0" unit="u2"/>
+                            <ocx:Z numericvalue="0.0" unit="u2"/>
+                        </ocx:Point>
+                    </ocx:Positions>
+                </ocx:CircumCircle3D>
+            </ocx:OuterContour>
+            <ocx:ComposedOf>
+                <ocx:Plate id="003" name="Plate_CircumCircle3D" ocx:GUIDRef="4f9fc7c3-106e-4acd-ba3d-e9fee7a4bcc4">
+                    <ocx:PlateMaterial localRef="nplcid4" ocx:GUIDRef="ae011c45-b6c5-4676-a2ba-a070a774c978" ocx:refType="ocx:Material">
+                        <ocx:Thickness numericvalue="0.015" unit="u2" />
+                    </ocx:PlateMaterial>
+                    <ocx:OuterContour>
+                        <ocx:CircumCircle3D id="004" ocx:GUIDRef="6a721615-406c-4f25-a539-25dc4562f1bd">
+                            <ocx:Positions>
+                                <ocx:Point>
+                                    <ocx:X numericvalue="10.0" unit="u2"/>
+                                    <ocx:Y numericvalue="10.0" unit="u2"/>
+                                    <ocx:Z numericvalue="0.0" unit="u2"/>
+                                </ocx:Point>
+                                <ocx:Point>
+                                    <ocx:X numericvalue="15.0" unit="u2"/>
+                                    <ocx:Y numericvalue="10.0" unit="u2"/>
+                                    <ocx:Z numericvalue="0.0" unit="u2"/>
+                                </ocx:Point>
+                                <ocx:Point>
+                                    <ocx:X numericvalue="12.5" unit="u2"/>
+                                    <ocx:Y numericvalue="15.0" unit="u2"/>
+                                    <ocx:Z numericvalue="0.0" unit="u2"/>
+                                </ocx:Point>
+                            </ocx:Positions>
+                        </ocx:CircumCircle3D>
+                    </ocx:OuterContour>
+                </ocx:Plate>
+            </ocx:ComposedOf>
+        </ocx:Panel>
+        <ocx:Panel id="0001" name="Panel_Circle3D" ocx:GUIDRef="6a7816g5-506c-4f25-a439-2f5c4a1551bd">
+            <ocx:UnboundedGeometry>
+                <ocx:SurfaceRef ocx:GUIDRef="{EDB9D10A-0440-4481-A4D8-5623522A13AE}" ocx:refType="ocx:Surface" />
+            </ocx:UnboundedGeometry>
+            <ocx:OuterContour>
+                <ocx:Circle3D id="0002" ocx:GUIDRef="6a721615-406c-4f25-a539-25dc4a1000bd">
+                    <ocx:Diameter numericvalue="5.0" unit="u2"/>
+                    <ocx:Center>
+                        <ocx:X numericvalue="20.0" unit="u2"/>
+                        <ocx:Y numericvalue="15.0" unit="u2"/>
+                        <ocx:Z numericvalue="0.0" unit="u2"/>
+                    </ocx:Center>
+                    <ocx:Normal x="0.0" y="0.0" z="1.0"/>
+                </ocx:Circle3D>
+            </ocx:OuterContour>
+            <ocx:ComposedOf>
+                <ocx:Plate id="0003" name="Plate_Circle3D" ocx:GUIDRef="4f9fcvc3-106e-4acd-ba3d-e9fee7a4bcc4">
+                    <ocx:PlateMaterial localRef="nplcid4" ocx:GUIDRef="ae011c45-b6c5-4676-a2ba-a070a774c978" ocx:refType="ocx:Material">
+                        <ocx:Thickness numericvalue="0.015" unit="u2" />
+                    </ocx:PlateMaterial>
+                    <ocx:OuterContour>
+                        <ocx:Circle3D id="0004" ocx:GUIDRef="6a721615-406c-4f25-a539-25dc4a1010bd">
+                            <ocx:Diameter numericvalue="5.0" unit="u2"/>
+                            <ocx:Center>
+                                <ocx:X numericvalue="20.0" unit="u2"/>
+                                <ocx:Y numericvalue="15.0" unit="u2"/>
+                                <ocx:Z numericvalue="0.0" unit="u2"/>
+                            </ocx:Center>
+                            <ocx:Normal x="0.0" y="0.0" z="1.0"/>
+                        </ocx:Circle3D>
+                    </ocx:OuterContour>
+                </ocx:Plate>
+            </ocx:ComposedOf>
+        </ocx:Panel>
+	</ocx:Vessel>
+	<ocx:ClassCatalogue id="nplcid2">
+		<ocx:MaterialCatalogue id="nplcid3">
+			<ocx:Material id="nplcid4" name="A" ocx:grade="A" ocx:GUIDRef="ae011c45-b6c5-4676-a2ba-a070a774c978">
+                <ocx:Density numericvalue="7847" unit="u7" />
+                <ocx:YoungsModulus numericvalue="10" unit="u4" />
+                <ocx:PoissonRatio numericvalue="10" unit="u6" />
+                <ocx:YieldStress numericvalue="100" unit="u4" />
+                <ocx:UltimateStress numericvalue="100" unit="u4" />
+			</ocx:Material>
+		</ocx:MaterialCatalogue>
+	</ocx:ClassCatalogue>
+    <unitsml:UnitsML xmlns:unitsml="urn:oasis:names:tc:unitsml:schema:xsd:UnitsMLSchema_lite-0.9.18">
+        <unitsml:UnitSet>
+            <unitsml:Unit xml:id="u2" dimensionURL="ID2">
+                <unitsml:UnitName xml:lang="en-us">meter</unitsml:UnitName>
+                <unitsml:UnitSymbol type="m" />
+            </unitsml:Unit>
+            <unitsml:Unit xml:id="u2" dimensionURL="ID2">
+                <unitsml:UnitName xml:lang="en-us">millimeter</unitsml:UnitName>
+                <unitsml:UnitSymbol type="mm" />
+                <unitsml:RootUnits>
+                    <unitsml:EnumeratedRootUnit unit="meter" prefix="m" powerNumerator="1" />
+                </unitsml:RootUnits>
+            </unitsml:Unit>
+            <unitsml:Unit xml:id="u3" dimensionURL="ID2">
+                <unitsml:UnitName xml:lang="en-us">knot</unitsml:UnitName>
+                <unitsml:UnitSymbol type="kn" />
+                <unitsml:RootUnits>
+                    <unitsml:EnumeratedRootUnit unit="knot" powerNumerator="1" />
+                </unitsml:RootUnits>
+            </unitsml:Unit>
+            <unitsml:Unit xml:id="u4" dimensionURL="ID2">
+                <unitsml:UnitName xml:lang="en-us">megapascal</unitsml:UnitName>
+                <unitsml:UnitSymbol type="MPa" />
+                <unitsml:RootUnits>
+                    <unitsml:EnumeratedRootUnit unit="pascal" prefix="M" powerNumerator="1" />
+                </unitsml:RootUnits>
+            </unitsml:Unit>
+            <unitsml:Unit xml:id="u5" dimensionURL="ID2">
+                <unitsml:UnitName xml:lang="en-us">area</unitsml:UnitName>
+                <unitsml:UnitSymbol type="A" />
+                <unitsml:RootUnits>
+                    <unitsml:EnumeratedRootUnit unit="meter" powerNumerator="2" />
+                </unitsml:RootUnits>
+            </unitsml:Unit>
+            <unitsml:Unit xml:id="u6" dimensionURL="ID3">
+                <unitsml:UnitName xml:lang="en-us">nondimensional</unitsml:UnitName>
+            </unitsml:Unit>
+            <unitsml:Unit xml:id="u7" dimensionURL="ID1">
+                <unitsml:UnitName xml:lang="en-us">kilo gram per cubic meter</unitsml:UnitName>
+                <unitsml:UnitSymbol type="kg/m3" />
+                <unitsml:RootUnits>
+                    <unitsml:EnumeratedRootUnit unit="gram" prefix="k" powerNumerator="1" />
+                    <unitsml:EnumeratedRootUnit unit="meter" powerNumerator="-3" />
+                </unitsml:RootUnits>
+            </unitsml:Unit>
+            <unitsml:Unit xml:id="u8" dimensionURL="ID2">
+                <unitsml:UnitName xml:lang="en-us">kg</unitsml:UnitName>
+                <unitsml:UnitSymbol type="kg" />
+            </unitsml:Unit>
+            <unitsml:Unit xml:id="u9" dimensionURL="ID9">
+                <unitsml:UnitName xml:lang="en-us">angle</unitsml:UnitName>
+                <unitsml:UnitSymbol type="rad" />
+                <unitsml:RootUnits>
+                    <unitsml:EnumeratedRootUnit unit="radian" />
+                </unitsml:RootUnits>
+            </unitsml:Unit>
+        </unitsml:UnitSet>
+        <unitsml:DimensionSet>
+            <unitsml:Dimension xml:id="ID2" dimensionless="false">
+                <unitsml:Length symbol="L" powerNumerator="1" />
+                <unitsml:Mass symbol="M" powerNumerator="1" />
+                <unitsml:Time symbol="T" powerNumerator="1" />
+                <unitsml:ElectricCurrent symbol="I" powerNumerator="1" />
+                <unitsml:ThermodynamicTemperature symbol="Theta" powerNumerator="1" />
+                <unitsml:AmountOfSubstance symbol="N" powerNumerator="1" />
+                <unitsml:LuminousIntensity symbol="J" powerNumerator="1" />
+            </unitsml:Dimension>
+            <unitsml:Dimension xml:id="ID3" dimensionless="true" />
+        </unitsml:DimensionSet>
+    </unitsml:UnitsML>
+</ocx:ocxXML>

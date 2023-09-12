@@ -234,7 +234,6 @@ TopoDS_Wire ReadEllipse3D(LDOM_Element const &ellipseN) {
   gp_Dir normal = majorAxis.Crossed(minorAxis);
 
   auto cosys = gp_Ax2(center, normal, majorAxis);
-  cosys.SetDirection(majorAxis);
 
   Handle(Geom_Ellipse) ellipse =
       new Geom_Ellipse(cosys, dMajor / 2.0, dMinor / 2.0);

@@ -35,8 +35,14 @@
 #ifdef _MSC_VER
 // Microsoft Visual C++ compiler
 #define gmtime(t, tstruct) gmtime_s(tstruct, t)
+#elif defined(__MINGW32__)
+// MinGW compiler
+#define gmtime(t, tstruct) gmtime_s(tstruct, t)
+#elif defined(__STDC_WANT_LIB_EXT1__)
+// Other compiler with support for the __STDC_WANT_LIB_EXT1__ macro
+#define gmtime(t, tstruct) gmtime_s(tstruct, t)
 #else
-// Other compilers
+// Other compiler without support for the __STDC_WANT_LIB_EXT1__ macro
 #define gmtime(t, tstruct) gmtime_r(t, tstruct)
 #endif
 

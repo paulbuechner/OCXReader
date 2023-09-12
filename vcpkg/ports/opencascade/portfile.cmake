@@ -17,6 +17,8 @@ else ()
   set(BUILD_TYPE "Static")
 endif ()
 
+message("VCPKG_CMAKE_SYSTEM_NAME : ${VCPKG_CMAKE_SYSTEM_NAME}")
+
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
                      FEATURES
                      "freeimage" USE_FREEIMAGE
@@ -69,7 +71,7 @@ foreach (file_name IN LISTS files)
 endforeach ()
 
 # Remove libd to lib, libd just has cmake files we dont want too
-if (WIN32)
+if (WIN32 AND VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Windows")
   file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib")
   file(RENAME "${CURRENT_PACKAGES_DIR}/debug/libd" "${CURRENT_PACKAGES_DIR}/debug/lib")
 endif ()
@@ -79,7 +81,7 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
   # debug creates libd and bind directories that need moving
-  if (WIN32)
+  if (WIN32 AND VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Windows")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
     file(RENAME "${CURRENT_PACKAGES_DIR}/debug/bind" "${CURRENT_PACKAGES_DIR}/debug/bin")
   endif ()

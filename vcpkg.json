@@ -17,7 +17,7 @@
     },
     {
       "name": "opencascade",
-      "version>=": "7.6.2#1"
+      "version>=": "7.7.1"
     },
     {
       "name": "boost-system",

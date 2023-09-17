@@ -1,30 +1,35 @@
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO Open-Cascade-SAS/OCCT
-  REF bb368e271e24f63078129283148ce83db6b9670a #V7.6.2
-  SHA512 500c7ff804eb6b202bef48e1be904fe43a3c0137e9a402affe128b3b75a1adbb20bfe383cee82503b13efc083a95eb97425f1afb1f66bae38543d29f871a91f9
+  REF ffce0d66bbaafe3a95984d0e61804c201b9995d2 #V7.7.1
+  SHA512 bf65ec9334e67e0d33cfd05c25e4ff1f454646a61b43fbbdce5cb38f9c433db421c90c4dc79bc401feeccb78b88be25615eb09b385636a243e75be3d3a9e1be4
   HEAD_REF master
   PATCHES
   fix-pdb-find.patch
   fix-install-prefix-path.patch
   install-include-dir.patch
-  fix-depend-freetype.patch
+  fix-feature-depend.patch
 )
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+# MinGW compiler does generate import libraries (.dll.a files) for DLLs on Windows.
+# Suppresses Warning: Import libraries were not present (only looking for ".lib" files)
+if (WIN32 AND VCPKG_CMAKE_SYSTEM_NAME STREQUAL "MinGW")
+  set(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
+endif ()
+
+if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
   set(BUILD_TYPE "Shared")
 else ()
   set(BUILD_TYPE "Static")
 endif ()
-
-message("VCPKG_CMAKE_SYSTEM_NAME : ${VCPKG_CMAKE_SYSTEM_NAME}")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
                      FEATURES
                      "freeimage" USE_FREEIMAGE
                      "tbb" USE_TBB
                      "rapidjson" USE_RAPIDJSON
-                     )
+                     "samples" INSTALL_SAMPLES
+)
 
 # VTK option in opencascade not currently supported because only 6.1.0 is supported but vcpkg has >= 9.0
 
@@ -42,12 +47,12 @@ vcpkg_cmake_configure(
   -DBUILD_SAMPLES_QT=OFF
   -DBUILD_DOC_Overview=OFF
   -DINSTALL_TEST_CASES=OFF
-  -DINSTALL_SAMPLES=OFF
 )
 
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/opencascade)
+vcpkg_copy_tools(TOOL_NAMES ExpToCasExe AUTO_CLEAN)
 
 #make occt includes relative to source_file
 list(APPEND ADDITIONAL_HEADERS
@@ -58,7 +63,7 @@ list(APPEND ADDITIONAL_HEADERS
      "NCollection_Haft.h"
      "OSD_PerfMeter.h"
      "Standard_values.h"
-     )
+)
 
 file(GLOB files "${CURRENT_PACKAGES_DIR}/include/opencascade/[a-zA-Z0-9_]*\.[hgl]xx")
 foreach (file_name IN LISTS files)
@@ -71,7 +76,7 @@ foreach (file_name IN LISTS files)
 endforeach ()
 
 # Remove libd to lib, libd just has cmake files we dont want too
-if (WIN32 AND VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Windows")
+if (WIN32 AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "MinGW")
   file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib")
   file(RENAME "${CURRENT_PACKAGES_DIR}/debug/libd" "${CURRENT_PACKAGES_DIR}/debug/lib")
 endif ()
@@ -79,13 +84,7 @@ endif ()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-  # debug creates libd and bind directories that need moving
-  if (WIN32 AND VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Windows")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/bind" "${CURRENT_PACKAGES_DIR}/debug/bin")
-  endif ()
-
+if (NOT VCPKG_BUILD_TYPE)
   # fix paths in target files
   list(APPEND TARGET_FILES
        "${CURRENT_PACKAGES_DIR}/share/opencascade/OpenCASCADEApplicationFrameworkTargets-debug.cmake"
@@ -95,14 +94,23 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
        "${CURRENT_PACKAGES_DIR}/share/opencascade/OpenCASCADEModelingAlgorithmsTargets-debug.cmake"
        "${CURRENT_PACKAGES_DIR}/share/opencascade/OpenCASCADEModelingDataTargets-debug.cmake"
        "${CURRENT_PACKAGES_DIR}/share/opencascade/OpenCASCADEVisualizationTargets-debug.cmake"
-       )
+  )
 
   foreach (TARGET_FILE IN LISTS TARGET_FILES)
     file(READ "${TARGET_FILE}" filedata)
-    string(REGEX REPLACE "libd" "lib" filedata "${filedata}")
-    string(REGEX REPLACE "bind" "bin" filedata "${filedata}")
+    string(REGEX REPLACE "/libd" "/lib" filedata "${filedata}")
+    string(REGEX REPLACE "/bind" "/bin" filedata "${filedata}")
     file(WRITE "${TARGET_FILE}" "${filedata}")
   endforeach ()
+
+endif ()
+
+if (VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+  # debug creates libd and bind directories that need moving
+  if (NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "MinGW")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/bind" "${CURRENT_PACKAGES_DIR}/debug/bin")
+  endif ()
 
   # the bin directory ends up with bat files that are noise, let's clean that up
   file(GLOB BATS "${CURRENT_PACKAGES_DIR}/bin/*.bat")
@@ -114,4 +122,4 @@ else ()
   file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif ()
 
-file(INSTALL "${SOURCE_PATH}/OCCT_LGPL_EXCEPTION.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/OCCT_LGPL_EXCEPTION.txt")
